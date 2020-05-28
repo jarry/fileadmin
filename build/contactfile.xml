@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 根据需要合并成几个或者单个JS文件
+ 最后采用合并为2个js的方式，不采用contactfile.xml
+ contact multilateral files or single file by requirement
+-->
+<project name="Fileadmin JavaScript Contact" default="" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+                
+	<!-- copy the js of the directory to other directory -->
+	<!--
+	<target name="copy JS files under js-src" depends="">
+    	<echo message="Copy ${js-src-path} Files Begin" />		
+		<copy todir="${js-path}">
+			<fileset dir="${js-src-path}/" includes="*.js"></fileset>
+		</copy>
+    	<echo message="Copy ${js-path} Files Finished" />	
+    </target>
+    --> 
+
+	<!-- 分割线，采用以下的合并方式，一共合并为两个文件 -->
+	
+	<!--contact fa.js-->
+	<target name="merge fa.js" depends="">	
+    	<echo message="Concat Code Files Begin" />		
+        <concat destfile="${js-path}/fa.js" encoding="utf-8">
+          
+    		<fileset dir="${js-src-path}/lib/" includes="youngli.js" />
+    		<fileset dir="${js-src-path}/lib/" includes="string.js" />
+            <fileset dir="${js-src-path}/lib/" includes="browser.js" />
+            <fileset dir="${js-src-path}/lib/" includes="dom.js" />
+            <fileset dir="${js-src-path}/lib/" includes="ajax.js" />
+            <fileset dir="${js-src-path}/lib/" includes="event.js" />
+            <fileset dir="${js-src-path}/lib/" includes="array.js" /> 
+    		<fileset dir="${js-src-path}/lib/" includes="page.js" />
+    		<fileset dir="${js-src-path}/lib/" includes="cookie.js" />
+    		<fileset dir="${js-src-path}/lib/" includes="drag.js" />
+        	
+			<fileset dir="${js-src-path}/util/tree/" includes="dhtmlxcommon.js" />
+			<fileset dir="${js-src-path}/util/tree/" includes="dhtmlxtree.js" />
+        	
+			<fileset dir="${js-src-path}/util/upload/" includes="swfupload.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.queue.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="fileprogress.js" />
+			<fileset dir="${js-src-path}/util/upload/" includes="handlers.js" />
+        	
+        	<fileset dir="${js-src-path}/fa/" includes="tpl.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="config.js" />
+        	<fileset dir="${js-src-path}/com/" includes="com.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="action.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="upload.class.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="upload.act.js" />        	
+        	<fileset dir="${js-src-path}/fa/" includes="dir.class.js" />        	
+        	<fileset dir="${js-src-path}/fa/" includes="dir.act.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="file.class.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="file.act.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="help.class.js" />
+        	<fileset dir="${js-src-path}/fa/" includes="help.act.js" />
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+
+	<!--contact all.js-->
+	<!--
+	<target name="merge core.js" depends="">	
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${js-path}/core.js" encoding="utf-8">
+			<fileset dir="${js-src-path}/lib/" includes="string.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="browser.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="dom.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="ajax.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="event.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="array.js" />
+        	
+			<fileset dir="${js-src-path}/util/tree/" includes="dhtmlxcommon.js" />
+			<fileset dir="${js-src-path}/util/tree/" includes="dhtmlxtree.js" />
+        	
+			<fileset dir="${js-src-path}/util/upload/" includes="swfupload.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.queue.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="fileprogress.js" />
+			<fileset dir="${js-src-path}/util/upload/" includes="handlers.js" />
+
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+-->
+	<!-- 分割线，采用以下的合并方式，复制所有的css文件到fa.css -->	
+	<!--contact css -->
+    <property name="css-src-path" value="${root-path}css-src" />
+    <property name="css-path" value="${root-path}css" />
+	<target name="merge fa.css" depends="">	
+    	<echo message="Concat CSS Files Begin" />		
+        <concat destfile="${css-path}/fa.css" encoding="utf-8">
+        	<fileset dir="${css-src-path}/" includes="default.css" />
+        	<fileset dir="${css-src-path}/" includes="swfupload.css" />
+        	<fileset dir="${css-src-path}/" includes="tree.css" />
+        </concat>
+    	<echo message="Concat CSS Files Finished" />		
+    </target> 
+
+</project>

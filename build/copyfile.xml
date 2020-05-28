@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ copy all include.js from js-sc dir to js dir
+ copy all include.css from css-sc dir to css dir
+ -->
+<project name="Fileadmin Files Copy" default="" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+	
+	   <target name="Copy *.inc.js" depends="">	   	
+    	<echo message="Delete ${js-path} Files Begin" />
+	   	<!-- if the file exsiting delete first -->	   
+		<delete>
+			 <fileset dir="${js-path}/" includes="**/*.js"/>
+	   	</delete>
+		<!--<delete file="${root-path}js/fa.js"/>-->			   	
+    	<echo message="Delete ${js-path} Files End" />	
+	   	
+			<echo message="Copy JS File Begin" />
+			<copy todir="${js-path}/">
+				<fileset dir="${js-src-path}/" includes="**/*.inc.js"></fileset>
+				<mapper type="glob" from="*.inc.js" to="*.js" />
+			</copy>
+	   	<!--
+	    	<copy tofile="${js-path}/fa.js">
+		  		<fileset file="${js-src-path}/fa.inc.js">
+		  		</fileset>
+			</copy>
+			-->
+			<echo message="Copy JS File Finished" />
+	   </target>
+ 
+	<!-- 复制所有除js文件外的文件夹与其他文件，本系统暂不采用 -->
+   <target name="Copy all JS dir" depends="">
+		<echo message="Copy ${js-path} Files Begin" />
+    	<copy todir="${js-path}">
+	  		<fileset dir="${js-src-path}">
+	  			<!-- copy all files except JS -->
+	  			<exclude name="**/*.js"/>	
+	  		</fileset>
+		</copy>
+		<echo message="Copy ${js-path} Files Finished" />
+   </target>
+	
+<!-- copy css of the css-src directory to css directory -->
+    <property name="css-src-path" value="${root-path}css-src" />
+	<property name="css-path" value="${root-path}css"/>
+	<target name="Copy *.inc.css" depends="">
+    	<echo message="Delete ${css-path} Files Begin" />		
+		<delete>
+			 <fileset dir="${css-path}/" includes="**/*.css"/>
+	   	</delete>
+    	<echo message="Delete ${css-path} Files End" />
+    	<echo message="Copy ${css-src-path} Files Begin" />		
+		<copy todir="${css-path}/">
+			<fileset dir="${css-src-path}/" includes="**/*.inc.css"></fileset>
+			<mapper type="glob" from="*.inc.css" to="*.css" />
+		</copy>
+    	<echo message="Copy ${css-path} Files Finished" />
+    </target>
+
+</project>

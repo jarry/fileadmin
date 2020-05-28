@@ -1,0 +1,58 @@
+﻿安装配置FileAdmin
+===============================================
+    Author: Jarry Li (lichunping)
+    Contact: 
+        mail: jarryli@gmail.com or lichunping@baidu.com 
+        QQ:12263539 
+        sina weibo:http://weibo.com/jarryli
+    Date : 2010-5-15
+
+只要把项目放到tomcat项目即可运行，如果遇到问题请给我发邮件或QQ联系。
+===============================================
+
+
+先安装好JDK, TOMCAT，Struts
+
+## 1. 项目部署
+  在tomcat的server.xml里面增加如下内容:
+
+	<?xml version='1.0' encoding='utf-8'?>
+	<!-- fileadmin Project -->
+	<Context path="/fileadmin" reloadable="true" docBase="项目所在路径" workDir="work\Catalina\localhost\fileadmin" >
+	</Context>
+
+	或者在conf/Catalina/localhost/下新建 fileadmin.xml文件，添加以上内容
+
+## 2. 配置目录与用户
+--------------------------------------
+* fileadmin.properties 
+  路径: fileadmin/src/fileadmin.properties (开发路径)
+  实际生效的文件路径: fileadmin/WEB-INF/classes/fileadmin.properties
+ 
+  参数修改： 
+  fileadmin.root.path = 你的文件目录   # linux 下设置该目录属性权限为 777
+  fileadmin.admin.username = 用户名
+  fileadmin.admin.password = 密码 (md5加密)
+
+
+## 3. 配置系统参数，详见具体的配置文件
+--------------------------------------
+* config.js
+  路径: fileadmin/js-src/fa/config.js
+ 
+  参数修改： 
+  // 如果有web访问地址，可以提供在线打开地址的功能
+  FIEL_WEB_ROOT_URL : "http://127.0.0.1/ut/tmp/",
+  // office文件可以在线阅读的地址
+  DOC_WEB_ROOT_URL :  "http://127.0.0.1/ut/servlet/ReadWordLocal"
+
+  
+##  4. 系统编码
+--------------------------------------
+  * Web Server统一采用UTF-8编码
+  * 服务器系统需要采用zh_CN才能支持中文文件名
+
+## 5. 环境安装请参考
+--------------------------------------
+ * install apache tomcat.txt
+ * install struts2.txt

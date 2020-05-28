@@ -1,0 +1,334 @@
+配置JavaScript合并与压缩Ant文件
+
+/**
+ *
+ * 关于JS目录
+ * - js-sc 源码目录，一般是js源文件，为了开发方便，可能会拆分为若干小文件，有时也会含有其他文件
+ * - js    可执行文件目录，一般是压缩后的
+ * 
+ * 合并压缩流程说明
+ * 1. 执行 copyfile.xml
+                 执行命令把core-src.js,fa-src.js复盖到js下的core.js, fa.js，这样可以在开发时载入各个js，
+		 *-src.js文件一般是直接把需要合并的js引入进来，以方便开发时随时调试。
+                 也可以把js-src目录下的全部目录与文件(JS除外)复制到js目录。以便得到全部目录和其他可能需要的文件。
+                        
+ * 2. 执行 contactfile.xml or contactfile.more.xml
+               根据合并规则把js-src下的js文件合并输出到js目录下。有些不用合并就直接复制。
+               也可以只合并指定的文件。
+	       合并脚本一般在开发快结束时联调时使用。
+               
+ * 3. 执行 compress.xml，1) 把js目录下的全部目录复制到 build目录下的tmp文件夹下(tmp临时建立)
+ *                       2) 执行js目录下的文件压缩，输出压缩文件到build/tmp目录下，*.js更名为*-min.js
+ *                       3) 移动build/tmp目录下的*-min.js文件到js目录下，覆盖*.js文件
+ * 
+ *             压缩针对的是js或css整个项目，当需要单独压缩下面的某一目录或文件时，在compress.xml里面指定。
+               一般是在正式提测时执行压缩，以保证上线后效果一致性。源文件也同时上传到SVN里面，方面测试查找代码。
+ * 
+ * author: JarryLi@gmail.com
+ *
+ /
+
+
+## 1. 配置Ant
+--------------------------------------
+	在eclipse官方网站上下载的Eclipse IDE for Java Developers版本，直接就支持Ant。
+	在eclipse下编辑一个build.xml文件，eclipse默认会使用Ant的编辑器。Ant编辑器方便的提供了Ant文件的编写提示和自动完成。
+
+整合：模块的划分使得开发时需要分成许多个js文件，而为了减少请求数，需要在部署的时候进行文件的整合。
+
+	使用Ant的concat任务我们可以很方便的将多个文件的代码整合。
+	需要注意的是，当需要整合的文件不是系统默认编码时，要指定concat的encoding属性。
+
+
+
+压缩：为了优化流量，我们需要使用工具对js代码进行压缩。比如删除注释、空格与空行，缩短局部变量名称等。
+
+	在命令行下，我们可以使用yuicompressor压缩js和css代码。
+	在ant中，我们则使用apply任务来达到我们的目的。
+	由于yuicompressor的源文件和目标文件不能是同一个，所以我们先将代码压缩到临时文件，
+	然后再使用move任务将临时文件更名。
+
+	更多关于yuicompressor的资料，请查看其官方网站：
+	http://com3.devnet.re3.yahoo.com/yui/compressor/
+
+
+## 2. 建立copyfile.xml
+--------------------------------------
+path: build/copyfile.xml
+作用：把js-src下的目录与非js的源文件全部复制过来，以免js-src下存在其他的文件而没有复制过来。如swf, txt, html等
+              同时也把css-src下的目录复制过来
+
+	<?xml version="1.0" encoding="iso-8859-1"?>
+	<!-- copy all to js folder from js-sc folder except JavaScript file -->
+	<project name="Files Copy" default="default" basedir=".">
+		<property name="root-path" value="../" />
+	    <property name="js-src-path" value="${root-path}js-src" />
+	    <property name="js-path" value="${root-path}js" />
+	 
+	   <target name="default" depends="">
+		<copy todir="${js-path}">
+				<fileset dir="${js-src-path}">
+					<exclude name="**/*.js"/>	    		
+				</fileset>
+			</copy>
+	   </target>
+	</project>
+	<?xml version="1.0" encoding="iso-8859-1"?>
+
+## 3. 建立contactfile.xml or contactjs.xml
+--------------------------------------
+              因本例子需要减少js请求数，故合并为2个技术文件，参见contactjs.xml文件，contactfile.xml废弃
+              
+path: build/contactfile.xml
+作用：合并js，多个文件合并成一个文件，也提供copy功能，把仍需要单个存在的js复制到执行文件夹
+
+
+	<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 根据需要合并成几个或者单个JS文件
+ 最后采用合并为2个js的方式，不采用contactfile.xml
+ contact multilateral files or single file by requirement
+-->
+<project name="JavaScript Contact 1.0" default="" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+                
+	<!-- copy the js of the directory to other directory -->
+	<!--
+	<target name="copy JS files under js-src" depends="">
+    	<echo message="Copy ${js-src-path} Files Begin" />		
+		<copy todir="${js-path}">
+			<fileset dir="${js-src-path}/" includes="*.js"></fileset>
+		</copy>
+    	<echo message="Copy ${js-path} Files Finished" />	
+    </target>
+    --> 
+
+	<!-- 分割线，采用以下的合并方式，一共合并为两个文件 -->
+	
+	<!--contact fa.js-->
+	<target name="merge fa.js" depends="">	
+    	<echo message="Concat Code Files Begin" />		
+        <concat destfile="${js-path}/fa.js" encoding="utf-8">
+        	<fileset dir="${js-src-path}/fa/" includes="config.js" />        	
+        	<fileset dir="${js-src-path}/fa/" includes="dir.class.js" />        	
+        	<fileset dir="${js-src-path}/fa/" includes="action.js" />
+
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+
+	<!--contact all.js-->
+	<target name="merge core.js" depends="">	
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${js-path}/core.js" encoding="utf-8">
+        	
+			<fileset dir="${js-src-path}/lib/" includes="string.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="browser.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="ajax.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="dom.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="event.js" />
+        	
+			<fileset dir="${js-src-path}/util/upload/" includes="swfupload.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.queue.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="fileprogress.js" />
+			<fileset dir="${js-src-path}/util/upload/" includes="handlers.js" />
+
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+
+	<!-- 分割线，采用以下的合并方式，复制所有的css文件到fa.css -->	
+	<!--contact css -->
+    <property name="css-src-path" value="${root-path}css-src" />
+    <property name="css-path" value="${root-path}css" />
+	<target name="merge css" depends="">	
+    	<echo message="Concat CSS Files Begin" />		
+        <concat destfile="${css-path}/fa.css" encoding="utf-8">
+        	<fileset dir="${css-src-path}/" includes="default.css" />
+        	<fileset dir="${css-src-path}/" includes="swfupload.css" />
+        </concat>
+    	<echo message="Concat CSS Files Finished" />		
+    </target> 
+
+</project>
+
+path: build/contactfile_more.xml
+作用：合并js，多个文件合并一个文件，一般就是2-3个文件，1个核心文件，1个操作初始化文件
+	
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 根据需要合并成多个或者单个JS文件，本系统中为了减少请求提供2-3个js，本文件废弃，采用contactjs.xml的方案
+ contact multilateral files or single file by requirement
+-->
+<project name="File Merge 1.0" default="" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+                
+	<property name="lib.core.js" value="${js-path}/lib/core.js" />
+	<property name="util.menu.dtree.js" value="${js-path}/util/menu/dtree.js" />
+	<property name="util.upload.swfupload.js" value="${js-path}/util/upload/swfupload.js" />
+	
+	<!-- copy the js of the directory to other directory -->
+	<!--
+	<target name="copy JS files under js-src" depends="">
+    	<echo message="Copy ${js-src-path} Files Begin" />		
+		<copy todir="${js-path}">
+			<fileset dir="${js-src-path}/" includes="*.js"></fileset>
+		</copy>
+    	<echo message="Copy ${js-path} Files Finished" />	
+    </target>
+    --> 
+
+	<!--contact lib.core.js-->
+   <target name="merge lib.core.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${lib.core.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/lib/" includes="**/*.js" />
+        	<!--
+        	<fileset dir="${js-src-path}/lib/" includes="string.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="browser.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="ajax.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="dom.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="event.js" />
+        	-->
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>
+    
+	<!--contact dtree.js-->
+   <target name="merge util.menu.dtree.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${util.menu.dtree.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/util/menu/" includes="dtree.js" />
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>  
+    
+   <target name="merge util.upload.swfupload.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${util.upload.swfupload.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.queue.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="fileprogress.js" />
+			<fileset dir="${js-src-path}/util/upload/" includes="handlers.js" />
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>
+
+	<target name="merge dir.js" depends="">	
+    	<echo message="Concat Code Files Begin" />		
+        <concat destfile="${js-path}/dir.js" encoding="utf-8">
+        	<fileset dir="${js-src-path}/" includes="config.js" />
+        	<fileset dir="${js-src-path}/" includes="dir.class.js" />
+        	<fileset dir="${js-src-path}/" includes="action.js" />
+
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+
+</project>
+
+## 3. 建立compress.xml
+--------------------------------------
+path: build/compress.xml
+作用：压缩js源文件，全部压缩或者指定某些目录或文件压缩
+
+==============================================================================
+YUI Compressor 使用说明
+==============================================================================
+
+NAME
+
+  YUI Compressor - The Yahoo! JavaScript and CSS Compressor
+
+SYNOPSIS
+
+  Usage: java -jar yuicompressor-x.y.z.jar [options] [input file]
+
+  Global Options
+    -h, --help                Displays this information
+    --type <js|css>           Specifies the type of the input file
+    --charset <charset>       Read the input file using <charset>
+    --line-break <column>     Insert a line break after the specified column number
+    -v, --verbose             Display informational messages and warnings
+    -o <file>                 Place the output into <file>. Defaults to stdout.
+
+  JavaScript Options
+    --nomunge                 Minify only, do not obfuscate
+                                                                              仅是压缩，不混淆变量符号
+    --preserve-semi           Preserve all semicolons
+                                                                                保存所有的分号                              
+    --disable-optimizations   Disable all micro optimizations
+                                                                                禁止细节优化
+==============================================================================
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+process:
+	1. copy empty directory to ${compile-path} from ${js-path}
+	2. compress **/*.js ${compile-path} under, output ${compile-path}.The *.js changed name to *-min.js
+	3. move **/*-min.js ${compile-path} under to ${js-path}, overlay the **/*.js.
+	4. delete the ${compile-path} directory;
+
+mail: JarryLi@gmail.com	
+-->
+<project name="Files Compress" default="default" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+    
+    <property name="yuicompressor" value="../tools/yuicompressor-2.4.2.jar" />
+ 
+    <property name="compile-path" value="tmp" />
+	<target name="default" depends="">
+			<echo message="Copy JS files Begin" />
+			<!--
+			 create ${compile-path} directory.
+			 copy all sub directory and js files to the directory from  ${js-path}.
+			 -->
+			<mkdir dir="${compile-path}" />	
+			<copy todir="${compile-path}">
+		  		<fileset dir="${js-path}">
+		  			<!--<include name="**/*.js" />-->
+		  			<!-- copy js files only -->
+		  			<exclude name="**/*.*"/>
+		  			<!-- copy folders only -->
+		  			
+		  		</fileset>
+			</copy>
+			<echo message="Copy JS files Finished" />
+			
+			<echo message="Compress Code Begin" />
+	    	<apply executable="java" parallel="false" failonerror="true" dest="${compile-path}">
+	    		<fileset dir="${js-path}" includes="**/*.js" />
+	    		<arg line="-jar"/>
+	    		<arg path="${yuicompressor}" />
+	    		<arg line="--charset utf-8" /> 
+	    		<arg line="--type js"/>
+	    		<arg line="-o" />
+	    		<targetfile/>
+	    		<mapper type="glob" from="*.js" to="*-min.js" />
+	    	</apply>
+	    	<echo message="Compress Code Finished" />
+	    		
+			<!-- move all js files to ${js-path} from ${compile-path} -->
+			<echo message="Copy compress files Begin" />
+			<move todir="${js-path}">
+			<fileset dir="${compile-path}">
+				<include name="**/*.js"/>
+			</fileset>
+			<mapper type="glob" from="*-min.js" to="*.js"/>
+			</move>	
+			
+			<!-- delete the ${compile-path} directory trees -->
+			<!--<delete dir="${compile-path}"/>-->
+			
+	    	<echo message="Copy compress files Finished" /> 
+
+	</target>
+	
+</project>
+

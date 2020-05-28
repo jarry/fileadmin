@@ -1,0 +1,197 @@
+安装配置Struts2与JSTL
+
+先安装Tomcat 服务器，并建立项目，然后开始配置Struts和JSTL。
+
+##  1. 下载jar包
+--------------------------------------
+* struts2
+http://struts.apache.org/
+下载 for all或apps版本，从WEB-INF下lib下找出的几个jar文件。
+http://apache.freelamp.com/struts/binaries/struts-2.1.8-all.zip
+或直接用一个空白的例子，找到lib下的文件，如下：
+
+	commons-fileupload-1.2.1.jar
+	commons-io-1.3.2.jar
+	freemarker-2.3.15.jar
+	ognl-2.7.3.jar
+	struts2-core-2.1.8.jar
+	xwork-core-2.1.6.jar
+
+
+* JSTL
+	http://tomcat.apache.org/taglibs/standard/
+	jstl.jar
+	standard.jar)
+	或者1.2版本
+	http://download.java.net/maven/1/jstl/jars/
+	jstl-1.2.jar
+	jstl-1.2-sources.jar 
+
+把以上的jar文件全部复制到项目的WEB-INF/lib目录下。
+
+
+
+## 2. 添加项目与配置文件
+--------------------------------------
+* 给Tomcat添加项目，如果已有项目就不用重复了
+  修改 tomcat server.xml或在tomcat的conf/Catalina/localhost下建立xx.xml，添加以下内容：
+
+	<?xml version='1.0' encoding='utf-8'?>
+	<Context path="/访问url" reloadable="true" docBase="项目路径" workDir="项目工作路径，可以指向tomcat work" >
+	</Context>
+
+* 建立项目web.xml文件
+  在项目文件夹的WEB-INF下新建web.xml，添加以下内容：
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+	  "http://java.sun.com/dtd/web-app_2_3.dtd">   
+
+	<!-- 开启EL支持 -->
+	<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- 添加struts2拦截器 -->
+	    <filter>
+	<filter-name>struts2</filter-name>
+	<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	   </filter>
+
+	   <filter-mapping>
+	<filter-name>struts2</filter-name>
+	<url-pattern>/*</url-pattern>
+	   </filter-mapping>
+
+	<!-- 配置索引页 -->
+	   <welcome-file-list>
+	<welcome-file>index.action</welcome-file>
+	<welcome-file>index.html</welcome-file>
+	<welcome-file>index.jsp</welcome-file>
+	   </welcome-file-list>
+	</web-app>
+
+
+* 建立struts.xml和
+  在WEB-INF/src下建立struts.xml文件，添加以下内容：
+
+	 <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+	<struts>
+	<constant name="struts.locale" value="utf-8" />
+	   <package name="default" namespace="/" extends="struts-default">
+	<action name="HelloWorld" class="com.xx.test.HelloWorld">
+	   <result name="success">/WEB-INF/web/struts2success.jsp</result>
+	</action>
+	   </package>
+	</struts>
+
+    其中，namespage要写上，这里是根目录"/"，constant是全局变量，action的name是访问的action名，class指向Action类。
+    result中的name是结果名，当与Action类中execute方法返回的String等同时，映射到指向的结果页面。
+
+
+	struts.propertys文件，可选。重用配置，如：
+	struts.locale=zh_CN
+	struts.devMode = false
+
+
+## 3. 建立测试文件
+--------------------------------------
+* 建立Java文件
+  根据刚才的Action，在com.xx.test建立下建立 HelloWorld.java文件，输入以下代码：
+
+	package com.checkbox.struts;
+
+	public class HelloWorld {
+	    private String message;
+	    private String userName;
+
+	    public String execute() {  
+		setMessage("Hello, " + getUserName());
+		return "success";
+	   }
+
+	    public String getMessage() {
+		return message;
+	    }
+
+	    public void setMessage(String message) {
+		this.message = message;
+	    }
+
+	    public String getUserName() {
+		return userName;
+	    }
+	    
+	    public void setUserName(String userName) {
+		this.userName = userName;
+	    }
+	}
+
+* 建立提交页面，如test.jsp
+
+	<%@ page language="java" contentType="text/html; charset=utf-8"
+	    pageEncoding="utf-8"%>
+	<% 
+	request.setCharacterEncoding("utf-8");
+	response.setCharacterEncoding("utf-8");
+	%>
+	<%@ taglib prefix="s" uri="/struts-tags" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+	<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	<s:form action="HelloWorld" namespace="/" method="post">
+	Please input your name:
+	<s:textfield name="userName" value="" label="姓名"/>
+	<s:submit value="提交" />
+	</s:form>
+
+* 建立结果页面
+  建立result结果指向/WEB-INF/web/struts2success.jsp
+
+	<%@ page language="java" contentType="text/html; charset=utf-8"
+	    pageEncoding="utf-8"%>
+	<% 
+	request.setCharacterEncoding("utf-8");
+	response.setCharacterEncoding("utf-8");
+	%>
+	<%@ taglib prefix="s" uri="/struts-tags" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+	<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	<!doctype html>
+	<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>欢迎来到这个页面</title>
+	</head>
+	<body>
+	EL输出：${message}
+	Struts输出：<s:property value="userName"/>
+	JSTL输出：<c:out value="${userName}"/>
+	</body>
+	</html>
+
+
+## 4. 最后测试
+--------------------------------------
+	输入http://127.0.0.0:8080/项目/HelloWorld.action即可访问该Action，可以通过test.jsp来提交测试。
+
+
+## 5. JDK + Tomcat + MySQL + Apache安装
+--------------------------------------
+	1. http://jiarry.bokee.com/6738182.html
+	2. http://jiarry.bokee.com/6234733.html
+	3. http://jiarry.bokee.com/6753866.html
+	4. Google或百度搜索 "JDK Tomcat Apache 安装 Jarry" 之类的关键词
+
+2009
+jarryli@gmail.com
+
+

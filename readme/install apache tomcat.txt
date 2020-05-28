@@ -1,0 +1,515 @@
+Linux 下安装配置 Jdk1.6+Tomcat6.0.x+MySql5.x+Apache2.2.x+jk_mod1.2+PHP5.x 简版
+
+本篇以Redhat AS5，内核为Linux 2.6.18-8.el5 为例，其中Redhat/Fedora系列基本一致，其他Linux或者版本均可以参考。
+
+STEP 1
+软件下载:
+1. jdk1.6.x   http://java.sun.com/javase/downloads/index.jsp
+2. tomcat6.x   http://tomcat.apache.org/download-60.cgi
+3. mysql5.x    http://dev.mysql.com/downloads/mysql/5.0.html
+                   http://dev.mysql.com/get/Downloads/MySQL-5.0/mysql-5.0.51a-linux-i686.tar.gz/from/pick
+4. JDBC connector   http://dev.mysql.com/downloads/connector/j/5.1.html
+5. apache2.x   http://httpd.apache.org/download.cgi
+6. php5.x      http://www.php.net/downloads.php
+7. jk_mod1.2.x  http://tomcat.apache.org/download-connectors.cgi
+
+SETP 2
+1. JDK安装
+     1.1  解压并授权
+        [work@localhost webServer]$ chmod a+r jdk-6u10-beta-linux-i586.bin 
+        [work@localhost webServer]$ ./jdk-6u10-beta-linux-i586.bin 
+        ＊＊＊ 一段许可协议 ***
+        Do you agree to the above license terms? [yes or no]
+        [work@localhost webServer]$ yes
+        ***  解压过程 ***
+        Done.
+        [work@localhost webServer]$ mv jdk1.6.0_10 /home/work/usr/local/
+        [work@localhost local]$ ln -s jdk1.6.0_10 jdk 
+
+    1.2  配置环境变量
+        编辑/etc/profile文件或者在/etc/profile.d/文件下新建java.sh文件
+        [work@localhost local]$ vim /etc/profile.d/java.sh
+        添加内容如下：
+
+        #set java 环境变量
+        JAVA_HOME=/home/work/usr/local/jdk
+        PATH=$PATH:/$JAVA_HOME/bin
+        CLASSPATH=.:$JAVA_HOME/lib
+        JRE_HOME=$JAVA_HOME/jre
+        export JAVA_HOME PATH CLASSPATH JRE_HOME
+
+    1.3  设置java和javac的符号连接，
+        [work@localhost local]#cd /usr/bin
+        [work@localhost local]#su root      
+        [root@localhost bin]# ln -s -f /home/work/usr/local/jdk/jre/bin/java
+        [root@localhost bin]# ln -s -f /home/work/usr/local/jdk/bin/javac
+
+    JDK安装完成，有问题请参考：http://jiarry.bokee.com/2425368.html
+
+2.  Tomcat安装
+    2.1  解压后移动文件夹到指定目录
+        [work@localhost webServer]$ tar -zxvf apache-tomcat-6.0.16.tar.gz 
+        [work@localhost webServer]$ mv apache-tomcat-6.0.16 /home/work/usr/local/
+    2.2  配置环境变量
+        编辑刚新建的/etc/profile.d/java.sh文件
+        TOMCAT_HOME = /home/work/usr/local/tomcat
+        export JAVA_HOME PATH CLASSPATH JRE_HOME TOMCAT_HOME
+
+3.    测试安装
+    3.1   检查环境变量和java版本        
+        [work@localhost ~]$ echo $JAVA_HOME            
+                /home/work/usr/local/jdk
+        [work@localhost ~]$ echo $PATH
+                输出的含有/home/work/usr/local/jdk/bin:
+        [work@localhost ~]$ echo $CLASSPATH
+                .:/home/work/usr/local/jdk/lib
+        [work@localhost ~]$ echo $TOMCAT_HOME
+                /home/work/usr/local/tomcat
+        [work@localhost ~]$ java -version
+
+    3.2   启动tomcat
+        [work@localhost local]$ sh /home/work/usr/local/tomcat/bin/startup.sh
+        在浏览器地址栏输入    http://localhost:8080/  
+
+    3.3  给Tomcat添加项目
+        3.3.1  修改tomcat/conf/server.xml：
+
+        <Context path="/test" reloadable="true" docBase="/home/work/dev/test"
+    workDir="/home/work/usr/local/tomcat/work/test" />              
+
+        3.3.2  开启目录浏览：
+        <param-name>listings</param-name>
+            <param-value>true</param-value>
+
+        3.3.3  开启servlet直接访问，打开注释
+        <servlet-name>invoker</servlet-name>
+            <servlet-class>
+              org.apache.catalina.servlets.InvokerServlet
+            </servlet-class>
+        还有这段
+        <servlet-mapping>
+            <servlet-name>invoker</servlet-name>
+        
+        context.xml文件里<Context>增加privileged
+        <Context privileged="true">
+
+SETP 3 MySql与JDBC connector
+1.  解压缩mysql-5.0.51a-linux-i686.tar.gz
+    [work@localhost webServer]$ tar -zxvf mysql-5.0.51a-linux-i686.tar.gz 
+    [work@localhost webServer]$ mv mysql-5.0.51a-linux-i686 /home/work/usr/local/
+
+2. 参照INSTALL-BINARY文件安装mysql
+    2.1  建立一个mysql符号连接
+    [work@localhost local]$ cd /home/work/usr/local/
+    [root@localhost local]# ln -s mysql-5.0.51a-linux-i686 mysql
+    [work@localhost local]$ su root
+    [root@localhost local]# su -
+    [root@localhost ~]# groupadd mysql
+    [root@localhost ~]# useradd -g mysql mysql
+
+    回到/home/work/usr/local/mysql/，更改目录所属为mysql
+    [root@localhost ~]# cd /home/work/usr/local/mysql/    
+    [root@localhost mysql]# chown -R mysql .
+    [root@localhost mysql]# chgrp -R mysql .
+
+    执行脚本生成mysql系统数据库
+    [root@localhost mysql]# scripts/mysql_install_db  --user=mysql
+
+    Installing MySQL system tables...
+    OK
+    Filling help tables...
+    OK
+    ……
+    出现成功提示之后，授权返还给work，但是data目录仍然给mysql账号    
+
+    [root@localhost mysql]# chown -R work . 
+    [root@localhost mysql]# chown -R mysql data
+
+    2.2  看/var/run/是否有mysqld目录，如果没有就新建。
+    [root@localhost mysql]# cd  /var/run/mysqld
+    [root@localhost run]# mkdir mysqld
+    [root@localhost mysqld]# cd mysqld
+    [root@localhost run]# chown -R mysql mysqld . 
+    [root@localhost run]# chgrp -R mysql mysqld . 
+    [root@localhost mysql]#su mysql    
+    [mysql@localhost mysql]$ vi /var/run/mysqld/mysqld.pid
+
+    查看/tmp/下是否有mysql.sock文件，把/home/mysql/mysql.sock做个符号连接到/tmp/临时文件夹下
+    [root@localhost mysql]# ln -s /home/mysql/mysql.sock /tmp/mysql.sock
+    [root@localhost tmp]# chown -R mysql mysql.sock 
+    [root@localhost tmp]# chgrp -R mysql mysql.sock
+
+    也可以查看一下/etc/my.cnf，检查配置
+    [root@localhost tmp]# cat /etc/my.cnf 
+
+    2.3  启动mysql服务
+    [root@localhost mysql]# bin/mysqld_safe --user=mysql &
+    [root@localhost mysql]# Starting mysqld daemon with databases from /var/lib/mysql
+
+    启动成功后，查看一下mysql的进程：
+    [root@localhost mysql]# ps -el | grep mysqld
+    4 S     0 14213 13164  0  84   0 -  1171 wait   pts/0    00:00:00 mysqld_safe
+    4 S   502 14241 14213  0  85   0 -  8223 -      pts/0    00:00:00 mysqld
+    1 S   502 14242 14241  0  78   0 -  8223 -      pts/0    00:00:00 mysqld
+    1 S   502 14243 14242  0  85   0 -  8223 rt_sig pts/0    00:00:00 mysqld
+    [root@localhost tmp]# netstat -na | grep 3306
+    tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      
+
+    2.4  登录mysql试一下，可用其他账户
+    [root@localhost mysql]# su work
+    [work@localhost mysql]$ cd /home/work/usr/local/mysql/
+    [work@localhost mysql]$ bin/mysql -uroot -p密码    
+
+    2.5  配置自动启动
+    [root@localhost mysql]# cp support-files/mysql.server /etc/rc.d/init.d/mysqld
+    [root@localhost mysql]# chmod 777 /etc/init.d/mysqld 
+    [root@localhost init.d]# su -
+    [root@localhost ~]# chkconfig --add mysqld
+
+    mysql配置完成。
+
+3. mysql-connector-java安装
+    3.1  解压缩，把jar文件移到tomcat lib目录下    
+    [work@localhost webServer]$ tar -zxvf mysql-connector-java-5.1.6.tar.gz 
+    [work@localhost webServer]$ cp mysql-connector-java-5.1.6/mysql-connector-java-5.1.6-bin.jar /home/work/usr/local/tomcat/lib/
+    3.2   配置数据池连接
+        3.2 .1  修改tomcat/conf/server.xml，对原来test项目进行修改，添加数据池配置
+     <Context path="/test" docBase="/home/work/dev/test"
+        debug="5" reloadable="true" crossContext="true"  workDir="/home/work/usr/local/tomcat/work/test">
+  <Resource  name="jdbc/test"
+             auth="Container"
+    type="javax.sql.DataSource"
+             maxActive="100" maxIdle="30" maxWait="10000"
+             username="root" password=""
+    driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://localhost:3306/test_db_name?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8"/>
+ </Context> 
+
+        3.2 .2  在/home/work/dev/test/下建立WEB-INF/web.xml文件，加入如下内容：
+    <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+  <description>My Test App</description>
+     <resource-ref>
+      <description>DB Connection</description>
+      <res-ref-name>jdbc/test</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+  </resource-ref>
+  </web-app> 
+
+   3.2.3 建立一个测试文件
+   <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+    <%@ page import="java.sql.*"%>
+    <%@ page import="javax.sql.*"%>
+    <%@ page import="javax.naming.*"%>
+     数据库连接池测试结果：
+     <%
+     out.println("JDBC驱动检查<br>");
+     try {
+      Class.forName("com.mysql.jdbc.Driver");
+      out.println("检查成功！<br>");
+     } catch (ClassNotFoundException cnfe) {
+      out.println("JDBC驱动创建失败！<br>");
+      cnfe.printStackTrace();
+     }    
+      out.println("<br>环境命名空间检查<br>");
+     try {
+        javax.naming.Context ctx = new javax.naming.InitialContext();
+      javax.naming.Context envContext =
+       (javax.naming.Context) ctx.lookup("java:/comp/env");
+      out.println("检查成功！<br>");      
+      out.println("<br>查找数据源<br>");
+         // org.apache.commons.dbcp.BasicDataSource ds =
+         //   (org.apache.commons.dbcp.BasicDataSource) envContext.lookup("jdbc/test");
+      DataSource ds =(DataSource)ctx.lookup("java:comp/env/jdbc/test");
+      out.println("查找成功!<br>");
+    } catch (javax.naming.NamingException e) {
+      out.println("环境变量上下文创建失败！<br>");
+      e.printStackTrace();
+     }
+   %>
+
+        参考:http://jiarry.bokee.com/6234733.html
+        http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
+    
+SETP 4 Apache安装配置
+        1  解压缩Apache，
+        [work@localhost webServer]$ tar -zxvf httpd-2.2.9.tar.gz 
+        可以把得到的文件夹移动到安装目录，比如/home/work/software/下，这里放在/home/work/software/webServer/
+        [work@localhost webServer]$ cd httpd-2.2.9
+        [work@localhost httpd-2.2.9]$ ./configure --help 
+        [work@localhost httpd-2.2.9]$ ./configure --prefix=/home/work/usr/local/apache2 --enable-mods-shared=all 
+        [work@localhost httpd-2.2.9]$ make        
+        [work@localhost httpd-2.2.9]$ make install
+        [work@localhost httpd-2.2.9]$ cd /home/work/usr/local/apache2
+        [root@localhost apache2]# su root
+        [work@localhost apache2]$ bin/apachectl start
+        编译安装--enable-so-mods-shared=all新版的安装文档里没有提示需要加载，直接./configure --prefix=/home/work/usr/local/apache2即可
+        安装过程要2分钟时间，完成后，切换到root账号启动Apache
+        在地址栏输入http://localhost/，看到 it works欢迎页表示成功
+        参照：http://httpd.apache.org/docs/2.2/install.html
+
+        2  配置apache/conf/http.conf
+        #添加test项目
+        Alias /ut "/home/work/dev/test"
+        <Directory "/home/work/dev/test">
+        Options Indexes FollowSymLinks MultiViews Includes ExecCGI
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+        </Directory>
+
+        #禁止访问WEB-INF文件夹
+        <Directory  "/home/work/dev/test/WEB-INF">
+       Order allow,deny
+        </Directory> 
+
+        打开注释配置语言，可以设置默认中文
+        Include conf/extra/httpd-languages.conf
+
+        在extra/httpd-languages.conf增加如下代码：
+        DefaultLanguage zh-CN
+       AddDefaultCharset gb2312
+
+        3  打开浏览器输入http://localhost/test/ 是否能看到目录列表呢，访问测试。
+            如果遇到禁止访问，则需要授权 [work@localhost ut]$ chmod 777 * 
+
+SETP 5 jk_mod整合Apache与Tomcat    
+    1  把下载到的二进制文件mod_jk-1.2.26-httpd-2.2.6.so复制到apache的modules目录下
+    下载地址：　http://apache.mirror.phpchina.com/tomcat/tomcat-connectors/jk/binaries/linux/jk-1.2.26/
+    
+    2  在Apache的conf目录新建立两个文件，mod_jk.conf和workers.properties文件，配置过程与windows基本一样。
+        mod_jk.conf的内容是jk的配置文件，包括装载模块和日志信息以及指定解析的工作器和目录，workers.properties是Tomcat wokers的配置文件。
+
+    3  在mod_jk.conf里加入以下内容(mod_jk.conf文件是方便管理，而不需要把配置都写在httpd.conf里)
+        #加载jk模块，名字要对应
+        LoadModule jk_module modules/mod_jk-1.2.26-httpd-2.2.6.so  
+        JkWorkersFile conf/workers.properties
+        JkLogFile logs/mod_jk.log
+        JkShmFile logs/mod_jk.shm
+        JkLogLevel info
+        JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+
+        JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+        JkRequestLogFormat "%w %V %T"
+
+        JkMount /servlet/* ajp13     
+        JkMount /*.jsp ajp13
+        JkMount /*.do ajp13     
+        # JkMount 表示使用Tomcat来解析， JkUnMount则相反
+         #JkAutoAlias /home/work/dev/test/*  
+        JkMount /test/servlet/* ajp13    
+        #/test/servlet/下所有的文件也交给Tomcat处理
+
+    4  编辑Apache的httpd.conf文件，添加：
+        Include conf/mod_jk.conf
+
+    5  编辑workers.properties文件，添加：
+        workers.tomcat_home=/home/work/usr/local/tomcat/
+        workers.java_home=/home/work/usr/local/jdk/
+        ps=\
+        worker.list=ajp13
+        worker.ajp13.port=8009
+        worker.ajp13.host=localhost
+        worker.ajp13.type=ajp13
+        worker.ajp13.lbfactor=1
+        #如果没有专门的配置，也可以不添加这些内容，空文件或者不要该也可以
+    
+    7   重启Apache测试
+        [work@localhost modules]$ su -c '/home/work/usr/local/apache2/bin/apachectl restart'
+        打开浏览器，分别通过以下两个地址访问jsp文件，如果均能正常解析表示整合成功，根据之前Apache和Tomcat的配置，test指向同一个目录
+        http://localhost/test/ 　
+        http://localhost:8080/test/ 
+
+        这样，Ａpache与Tomcat加Jk_mod就整理完成了。
+        配置文件详解：
+        http://tomcat.apache.org/connectors-doc/reference/apache.html
+
+SETP 5 安装PHP
+        1  先要安装zlib，libpng和libxml、gd2库等，以便支持图形库等，可以根据需要来选装。
+            下载地址：
+            1)zlib：            http://www.zlib.net/
+            2)libpng：         http://www.libpng.org/pub/png/libpng.html
+            3)libxml2：         ftp://xmlsoft.org/libxml2/
+            4)libtiff：         ftp://ftp.remotesensing.org/pub/libtiff/
+            5)jpegsrc：         ftp://ftp.uu.net/graphics/jpeg/
+            6)freetype2：     http://freetype.sourceforge.net/download.html
+            7)gd2：             http://www.libgd.org/Downloads
+            8)openssl:        http://www.openssl.org/source/
+            
+            这几个PHP的库安装方式都是一致的，命令如下：
+            ./configure [--prefix=/path]
+            make check
+            make install
+
+            1.1  zlib安装：
+            [work@localhost php_lib]$ tar -zxvf zlib-1.2.3.tar.gz 
+            [work@localhost php_lib]$ cd zlib-1.2.3
+            [work@localhost zlib-1.2.3]$ ./configure --prefix=/home/work/usr/local/zlib/
+            [work@localhost zlib-1.2.3]$ make
+            [work@localhost zlib-1.2.3]$ make install
+
+            1..2  libpng安装：
+            [work@localhost php_lib]$ tar -zxvf libpng-1.2.29.tar.gz 
+            [work@localhost php_lib]$ cd libpng-1.2.29
+            [work@localhost libpng-1.2.29]$ ./configure --prefix=/home/work/usr/local/libpng 
+            [work@localhost libpng-1.2.29]$ make
+            [work@localhost libpng-1.2.29]$ make install
+            
+            1.3  libxml2安装：
+            [work@localhost php_lib]$ tar -zxvf libxml2-2.6.32.tar.gz 
+            [work@localhost php_lib]$ cd libxml2-2.6.32
+            [work@localhost libxml2-2.6.32]$ ./configure --prefix=/home/work/usr/local/libxml2
+            [work@localhost libxml2-2.6.32]$ make
+            [work@localhost libxml2-2.6.32]$ make install            
+
+            1..4  libtiff安装：
+            [work@localhost php_lib]$ tar -zxvf tiff-4.0.0beta2.tar.gz 
+            [work@localhost php_lib]$ cd tiff-4.0.0beta2
+            [work@localhost tiff-4.0.0beta2]$ ./configure --prefix=/home/work/usr/local/tiff
+            [work@localhost tiff-4.0.0beta2]$ make
+            [work@localhost tiff-4.0.0beta2]$ make install    
+
+            1.5  jpegsrc安装：
+            [work@localhost php_lib]$ tar -zxvf jpegsrc.v6b.tar.gz 
+            [work@localhost php_lib]$ cd jpeg-6b/
+            [work@localhost jpeg-6b]$ ./configure --prefix=/home/work/usr/local/jpeg/ --enable-shared --enable-static
+            [work@localhost jpeg-6b]$ make
+            [work@localhost jpeg-6b]$ make install
+
+            (提示/home/work/usr/local/jpeg/没有bin/cjpeg和man文件夹，根据提示来分别创建即可，再执行make instal就ok了
+            [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/bin/
+            [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/bin/cjpeg
+            [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/man/)
+
+            1.6  FreeType安装：
+            [work@localhost php_lib]$ tar -zxvf freetype-2.3.6.tar.gz 
+            [work@localhost php_lib]$ cd freetype-2.3.6/
+            [work@localhost freetype-2.3.6]$ ./configure --prefix=/home/work/usr/local/freetype2
+            [work@localhost freetype-2.3.6]$ make
+            [work@localhost freetype-2.3.6]$ make install
+
+            1.7  gd2安装：
+            [work@localhost php_lib]$ tar -jxvf gd-2.0.35.tar.bz2 
+            [work@localhost php_lib]$ cd gd-2.0.35
+            [work@localhost gd-2.0.35]$ ./configure --prefix=/home/work/usr/local/gd2 \
+                                                 --with-zlib=/home/work/usr/local/zlib/ \
+                                                 --with-png=/home/work/usr/local/libpng/ \
+                                                 --with-jpeg=/home/work/usr/local/jpeg/ \
+                                                 --with-freetype=/home/work/usr/local/freetype2/
+            [work@localhost gd-2.0.35]$ make
+            [work@localhost gd-2.0.35]$ make install
+
+            1.8  openssl安装：
+            [work@localhost php_lib]$ tar -zxvf openssl-0.9.8g.tar.gz （这里有很多版本，可以选择一个比较稳定的版本）
+            [work@localhost php_lib]$ cd openssl-0.9.8g
+            [work@localhost openssl-0.9.8g]$ ./config --prefix=/home/work/usr/local/openssl --openssldir=/home/work/usr/local/openssl shared
+            [root@localhost openssl-0.9.8g]# make
+            [root@localhost openssl-0.9.8g]# su -c 'make install'
+
+            [root@localhost openssl]# cd /home/work/usr/local/openssl/
+            [root@localhost openssl]# chown -R work:work openssl
+
+        2  执行PHP安装
+            2.1  解压缩PHP包，仔细阅读INSTALL文件，按照提示安装
+            [work@localhost webServer]$ tar -jxvf php-5.2.6.tar.bz2 
+            [work@localhost webServer]$ cd php-5.2.6
+            [work@localhost php-5.2.6]$ cat INSTALL 
+            
+            2.2  执行安装，在命令行如，除apache和mysql,gd库，其他可以选装：
+            ./configuare --prefix=/home/work/usr/local/php5 --enable-so \
+                             --with-apxs2=/home/work/usr/local/apache2/bin/apxs \ #高版本要写成apxs2，安装前将apache停掉。
+                             --with-mysql=/home/work/usr/local/mysql \
+                             --with-gd=/home/work/usr/local/gd2 \
+                             --with-zlib=/home/work/usr/local/zlib \
+                             --with-png-dir=/home/work/usr/local/libpng \
+                             --with-libxml-dir=/home/work/usr/local/libxml2 \
+                             --with-jpeg-dir=/home/work/usr/local/jpeg \
+                             --with-tiff-dir=/home/work/usr/local/tiff \    
+                             --with-freetype-dri=/home/work/usr/local/freetype2 \    
+                             --with-openssl=/home/work/usr/local/openssl    
+            可以复制下面的命令去修改：
+            [work@localhost php-5.2.6]$ ./configure --prefix=/home/work/usr/local/php5 --with-apxs2=/home/work/usr/local/apache2/bin/apxs --with-mysql=/home/work/usr/local/mysql --with-gd=/home/work/usr/local/gd2/ --with-zlib=/home/work/usr/local/zlib/ --with-png-dir=/home/work/usr/local/libpng/ --with-libxml-dir=/home/work/usr/local/libxml2/ --with-jpeg-dir=/home/work/usr/local/jpeg/ --with-tiff-dir=/home/work/usr/local/tiff/ --with-freetype-dir=/home/work/usr/local/freetype2/ --with-openssl=/home/work/usr/local/openssl/
+            会有信息提示，如下表示安装成功，如果有错误提示，按照提示去查找原因
+            ……
+            Thank you for using PHP.
+            ……
+            [work@localhost php-5.2.6]$ make
+            [work@localhost php-5.2.6]$ make test    # 按推荐先测试一下
+            [work@localhost php-5.2.6]$ make install        
+
+            2.3  执行安装时遇到一个错误(不同版本的Linux会有些差异)，如下
+            /home/work/usr/local/mysql/lib/libmysqlclient.so.15: cannot restore segment prot after reloc: Permission denied
+            搜索查了一下，网上有很多类似的问题。    解决方案如下：
+            1)   禁用 SELinux
+            [root@localhost webServer]# vi /etc/selinux/config
+            编辑/etc/selinux/config，把 SELINUX=enforcing注释掉，然后新加一行SELINUX=disabled
+            [root@localhost webServer]# vim /etc/sysconfig/selinux 
+            编辑/etc/sysconfig/selinux，把SELINUX=enforcing注释掉，新加一行SELINUX=disabled
+
+            2) chcon -t texrel_shlib_t
+            [work@localhost ~]$ chcon -t texrel_shlib_t /home/work/usr/local/mysql/lib/libmysqlclient.so.15
+（/路径/路径/文件名.so)
+            参考：
+            http://linux.chinaunix.net/bbs/thread-1001717-1-1.html
+            http://www.phpwhy.com/read-htm-tid-5317.html
+            http://bbs.chinaunix.net/viewthread.php?tid=1033055
+
+            2.4  复制php.ini文件（这里的PHP安装在work目录下，默认PHP安装在/usr/local/下，如用的默认目录就把php.ini复制到/usr/local/lib/下）
+            [work@localhost php-5.2.6]$ cp php.ini-dist /home/work/usr/local/php5/lib/php.ini
+
+        3  修改Apache里的http.conf文件，整合PHP与Apache
+            [work@localhost php-5.2.6]$ vi /home/work/usr/local/apache2/conf/httpd.conf
+            查看是否有：LoadModule php5_module modules/libphp5.so
+
+            添加以下到<IfModule mime_module>中
+            AddType application/x-httpd-php .php
+            AddType application/x-httpd-php-source .phps   
+            启动Apache：
+            提示：……libphp5.so: cannot restore segment prot after reloc: Permission denied            
+            [work@localhost php-5.2.6]$ chcon -t texrel_shlib_t /home/work/usr/local/apache2/modules/libphp5.so
+            [work@localhost php-5.2.6]$ su -c '/home/work/usr/local/apache2/bin/apachectl start'
+            [work@localhost php-5.2.6]$ ps -ef | grep httpd
+
+        4 测试            
+            41.  新建一个info.php文件
+            <?php
+                echo phpinfo();
+            ?>
+
+            42.  如果遇到禁止访问的提示
+            Forbidden
+            You don't have permission to access / on this server
+            则有几种可能：
+                1)   没有给文件授权。 通过 $ chmod 777 xxx.html授权
+                2)  看Apache http.conf里的DocumentRoot修改了，而<Directory 没有指定路径或者Deny from all，而不是Allow from All
+                3)  编辑http.conf文件，修改用户和组
+                    #User daemon 改成你自己的用户    User work
+                    #Group daemon 改成你自己的用户     Group work
+                4)  chcon -t texrel_shlib_t 相关文件，参考上面安装PHP的步骤。
+                
+        5   连接mysql，建立一个connect.php文件，输入以下代码，测试能否看到效果。
+            <pre>
+            <?php
+            $conn = mysql_connect("localhost", "root", "password");
+              if ($conn) {
+                  echo "Mysql Connect Successfully!";
+                } else {
+                  echo "Mysql Connect Failed!";
+              }
+            ?>
+            </pre>
+            如果能看到Mysql Connect Successfully!表示连接成功了。
+
+至此，一个Linux下的支持Java、PHP的完整Web Server就全部配置完成了。
+
+详细安装指南：
+http://docs.google.com/View?docid=dgh6pn6x_19ccgx54hd
+http://docs.google.com/Doc?id=dgh6pn6x_20cm4ktdcf
+
+JarryLi in Beijing 2008
+contact: jarryli(@)gmail.com
+

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 根据需要合并成多个或者单个JS文件，本系统中为了减少请求提供2-3个js，本文件废弃，采用contactjs.xml的方案
+ contact multilateral files or single file by requirement
+-->
+<project name="Fileadmin Merge multi files" default="" basedir=".">
+	<property name="root-path" value="../" />
+    <property name="js-src-path" value="${root-path}js-src" />
+    <property name="js-path" value="${root-path}js" />
+                
+	<property name="lib.core.js" value="${js-path}/lib/core.js" />
+	<property name="util.menu.dtree.js" value="${js-path}/util/menu/dtree.js" />
+	<property name="util.upload.swfupload.js" value="${js-path}/util/upload/swfupload.js" />
+	
+	<!-- copy the js of the directory to other directory -->
+	<!--
+	<target name="copy JS files under js-src" depends="">
+    	<echo message="Copy ${js-src-path} Files Begin" />		
+		<copy todir="${js-path}">
+			<fileset dir="${js-src-path}/" includes="*.js"></fileset>
+		</copy>
+    	<echo message="Copy ${js-path} Files Finished" />	
+    </target>
+    --> 
+
+	<!--contact lib.core.js-->
+   <target name="merge lib.core.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${lib.core.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/lib/" includes="**/*.js" />
+        	<!--
+        	<fileset dir="${js-src-path}/lib/" includes="string.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="browser.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="ajax.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="dom.js" />
+        	<fileset dir="${js-src-path}/lib/" includes="event.js" />
+        	-->
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>
+    
+	<!--contact dtree.js-->
+   <target name="merge util.menu.dtree.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${util.menu.dtree.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/util/menu/" includes="dtree.js" />
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>  
+    
+   <target name="merge util.upload.swfupload.js" depends="">
+    	<echo message="Concat Code Files Begin" />
+        <concat destfile="${util.upload.swfupload.js}" encoding="utf-8">
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="swfupload.queue.js" />
+        	<fileset dir="${js-src-path}/util/upload/" includes="fileprogress.js" />
+			<fileset dir="${js-src-path}/util/upload/" includes="handlers.js" />
+        </concat>
+    	<echo message="Concat Code Files Finished" />
+    </target>
+
+	<target name="merge dir.js" depends="">	
+    	<echo message="Concat Code Files Begin" />		
+        <concat destfile="${js-path}/dir.js" encoding="utf-8">
+        	<fileset dir="${js-src-path}/" includes="config.js" />
+        	<fileset dir="${js-src-path}/" includes="dir.class.js" />
+        	<fileset dir="${js-src-path}/" includes="action.js" />
+
+        </concat>        
+    	<echo message="Concat Code Files Finished" />		
+    </target> 
+
+</project>

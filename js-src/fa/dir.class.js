@@ -43,7 +43,7 @@ Directory.prototype._getHTML = function() {
 
 Directory.prototype.listDirTree = function() {	
 	 function dirClick(id, text) {
-		// UploadAction.setUploadPath(id);	 
+		// UploadAction.setUploadPath(id);
 	    DirAction.getDirJSON(id);
 	}	
 	

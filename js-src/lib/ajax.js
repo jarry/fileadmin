@@ -149,11 +149,12 @@ Youngli.ajax.get = function (url, onsuccess) {
  * @param {Function} onsuccess optional 请求成功之后调用的函数。传递的参数是xhr对象
  * @return {XMLHttpRequest} 发送请求的xhr对象
  */
-Youngli.ajax.post = function (url, data, onsuccess) {
+Youngli.ajax.post = function (url, data, onsuccess, onprogress) {
     return Youngli.ajax.request(
         url, 
         {
             'onsuccess': onsuccess,
+            'onprogress': onprogress,
             'method': 'POST',
             'data': data
         }
@@ -331,6 +332,13 @@ Youngli.ajax.request = function (url, options) {
             }
             url += 'b' + (new Date()).getTime() + '=1';
         }
+
+        // add onprogress event by jarry
+        xhr.upoload.onprogress = function(event) {
+            if (eventHandlers['onprogress']) {
+                eventHandlers['onprogress'].call(xhr, event);
+            }
+        }
         
         if (username) {
             xhr.open(method, url, async, username, password);
@@ -344,7 +352,9 @@ Youngli.ajax.request = function (url, options) {
         
         // 在open之后再进行http请求头设定
         if (method == 'POST') {
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            if (!(data instanceof FormData)) {
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            }
         }
         
         for (key in headers) {

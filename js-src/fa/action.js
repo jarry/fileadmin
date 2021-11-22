@@ -26,6 +26,6 @@ var MESSAGE = MESSAGE || {};
 var DIR = DIR || {};
 var FILE = FILE || {};
 var UPLOAD = UPLOAD || {};
-	UPLOAD.uploadPath = UPLOAD.uploadPath || '';
+UPLOAD.uploadPath = UPLOAD.uploadPath || '';
 var Tree = Tree || {};
 var SWFUP = SWFUP || {};

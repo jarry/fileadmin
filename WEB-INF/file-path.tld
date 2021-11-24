@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"  
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"  
+  version="2.0">  
+<description>File and Path </description>
+<display-name>File Path </display-name>
+  <tlib-version>1.0</tlib-version>  
+  <short-name>file path</short-name>  
+  <uri>http://fileadmin.youngli.com/filePath</uri>
+
+  <function>  
+    <description>获取文件后缀</description>    
+    <name>getExt</name>
+    <function-class>com.youngli.fileadmin.common.FilePath</function-class>
+    <function-signature>java.lang.String getExt(java.lang.String)</function-signature>
+ </function> 
+  <function>  
+    <description>判断指定后缀是否属于office后缀</description>    
+    <name>isOfficeExt</name>
+    <function-class>com.youngli.fileadmin.common.FilePath</function-class>
+    <function-signature>java.lang.boolean isOfficeExt(java.lang.String)</function-signature>
+ </function> 
+   <function>  
+    <description>得到相对根目录的项目对路径(目录)</description>    
+    <name>getRelativePath</name>
+    <function-class>com.youngli.fileadmin.common.FilePath</function-class>
+    <function-signature>java.lang.boolean getRelativePath(java.lang.String, java.lang.String)</function-signature>
+ </function> 
+ 
+   <function>  
+    <description>获取子文件夹下的文件夹数量</description>    
+    <name>getSubDirLength</name>
+    <function-class>com.youngli.fileadmin.common.FilePath</function-class>
+    <function-signature>java.lang.String getSubDirLength(java.lang.String, java.util.List)</function-signature>
+ </function> 
+ 
+    <function>  
+    <description>根据路径名是否需要增加斜杠</description>    
+    <name>getSlash</name>
+    <function-class>com.youngli.fileadmin.common.FilePath</function-class>
+    <function-signature>java.lang.String getSlash(java.lang.String)</function-signature>
+ </function> 
+
+</taglib>

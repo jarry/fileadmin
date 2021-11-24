@@ -103,6 +103,7 @@ DirAction = function() {
 		getDirJSON('');			//	初始化传入空路径
 		dirClass.setDirAndFileList();		
 		setPageHeight();
+		console.log('page init.');
 	}
 	
 	var getDirJSON = function(path) {
@@ -164,8 +165,11 @@ DirAction = function() {
 	}
 	
 }();
- 
-DirAction.pageInit();
+
+if (!this.FA_JS_ASYNC_LOAD) {
+ 	DirAction.pageInit();
+}
+
 Youngli.on(window, "onresize", DirAction.setPageHeight);
 Youngli.on(window, "onload", DirAction.dragColumn);
 

@@ -52,7 +52,7 @@ Youngli.string.getCharLength = function(str) {
 		len--;
 	}
 	return sin + dou;
-}
+};
 
 /**
  * 声明快捷方式

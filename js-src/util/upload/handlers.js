@@ -115,7 +115,6 @@ function uploadStart(file) {
 function uploadProgress(file, bytesLoaded, bytesTotal) {
 	try {
 		var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
-
 		var progress = new FileProgress(file, this.customSettings.progressTarget);
 		progress.setProgress(percent);
 		progress.setStatus("Uploading...");
@@ -196,7 +195,7 @@ function uploadError(file, errorCode, message) {
 }
 
 function uploadComplete(file) {
-	if (this.getStats().files_queued === 0) {
+	if (this.getStats && this.getStats().files_queued === 0) {
 		document.getElementById(this.customSettings.cancelButtonId).disabled = true;
 
 	}
@@ -208,7 +207,6 @@ function queueComplete(numFilesUploaded) {
 //	status.innerHTML = numFilesUploaded + " file" + (numFilesUploaded === 1 ? "" : "s") + " uploaded.";
 	status.innerHTML = "上传了" + numFilesUploaded +  "个文件"  + "";
 	// 上传完成后执行文件加载
-
 	if ('undefined' != typeof DirAction) {
 		DirAction.getDirJSON(UPLOAD.uploadPath);
 	}

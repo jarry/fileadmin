@@ -9,7 +9,7 @@
     <constant name="struts.devMode" value="true" />
     <!-- upload file max size 1G -->
 	<constant name="struts.multipart.maxSize" value="1073741824" />
-
+    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
     <include file="file-admin.xml"/>
 
 

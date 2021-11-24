@@ -12,11 +12,10 @@
 	<div class="info-panel">&nbsp;</div>
 	<form acion="/login.action" method="post">
 	<div class="login-tit">欢迎使用 <strong><span>F</span>ile<span>A</span>dmin</strong> Web文件管理系统<br/></div><br/>
-
 	<c:set var="validateCodeURL" value="validateCode"/>
 	<ol>
-		<li class="login-txt">用户名：</li><li><input name="userName" size="10" type="text" /></li>
-		<li class="login-txt">密&nbsp;&nbsp;&nbsp;&nbsp;码：</li><li><input name="passWord" size="10" type="password" /></li>
+		<li class="login-txt" title="share">用户名：</li><li><input name="userName" size="10" type="text" /></li>
+		<li class="login-txt" title="share123@Lego" >密&nbsp;&nbsp;&nbsp;&nbsp;码：</li><li><input name="passWord" size="10" type="password" /></li>
 		<li class="login-txt">验证码：</li>
 		<li><input type="text" name="validateCode" size="6" maxlength="4"><img src="${validateCodeURL}?d=${random}" style="cursor:pointer;vertical-align:middle" title="点击刷新图片" align="middle" onclick="this.src+='?d='+new Date();"></li>
 		<li class="login-txt">&nbsp;</li><li><font class="validate-tips">请输入验证码，不区分大小写。</font></li>

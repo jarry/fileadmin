@@ -1,9 +1,9 @@
-Linux ÏÂ°²×°ÅäÖÃ Jdk1.6+Tomcat6.0.x+MySql5.x+Apache2.2.x+jk_mod1.2+PHP5.x ¼ò°æ
+Linux ä¸‹å®‰è£…é…ç½® Jdk1.6+Tomcat6.0.x+MySql5.x+Apache2.2.x+jk_mod1.2+PHP5.x ç®€ç‰ˆ
 
-±¾ÆªÒÔRedhat AS5£¬ÄÚºËÎªLinux 2.6.18-8.el5 ÎªÀı£¬ÆäÖĞRedhat/FedoraÏµÁĞ»ù±¾Ò»ÖÂ£¬ÆäËûLinux»òÕß°æ±¾¾ù¿ÉÒÔ²Î¿¼¡£
+æœ¬ç¯‡ä»¥Redhat AS5ï¼Œå†…æ ¸ä¸ºLinux 2.6.18-8.el5 ä¸ºä¾‹ï¼Œå…¶ä¸­Redhat/Fedoraç³»åˆ—åŸºæœ¬ä¸€è‡´ï¼Œå…¶ä»–Linuxæˆ–è€…ç‰ˆæœ¬å‡å¯ä»¥å‚è€ƒã€‚
 
 STEP 1
-Èí¼şÏÂÔØ:
+è½¯ä»¶ä¸‹è½½:
 1. jdk1.6.x   http://java.sun.com/javase/downloads/index.jsp
 2. tomcat6.x   http://tomcat.apache.org/download-60.cgi
 3. mysql5.x    http://dev.mysql.com/downloads/mysql/5.0.html
@@ -14,92 +14,92 @@ STEP 1
 7. jk_mod1.2.x  http://tomcat.apache.org/download-connectors.cgi
 
 SETP 2
-1. JDK°²×°
-     1.1  ½âÑ¹²¢ÊÚÈ¨
+1. JDKå®‰è£…
+     1.1  è§£å‹å¹¶æˆæƒ
         [work@localhost webServer]$ chmod a+r jdk-6u10-beta-linux-i586.bin 
         [work@localhost webServer]$ ./jdk-6u10-beta-linux-i586.bin 
-        £ª£ª£ª Ò»¶ÎĞí¿ÉĞ­Òé ***
+        ï¼Šï¼Šï¼Š ä¸€æ®µè®¸å¯åè®® ***
         Do you agree to the above license terms? [yes or no]
         [work@localhost webServer]$ yes
-        ***  ½âÑ¹¹ı³Ì ***
+        ***  è§£å‹è¿‡ç¨‹ ***
         Done.
         [work@localhost webServer]$ mv jdk1.6.0_10 /home/work/usr/local/
         [work@localhost local]$ ln -s jdk1.6.0_10 jdk 
 
-    1.2  ÅäÖÃ»·¾³±äÁ¿
-        ±à¼­/etc/profileÎÄ¼ş»òÕßÔÚ/etc/profile.d/ÎÄ¼şÏÂĞÂ½¨java.shÎÄ¼ş
+    1.2  é…ç½®ç¯å¢ƒå˜é‡
+        ç¼–è¾‘/etc/profileæ–‡ä»¶æˆ–è€…åœ¨/etc/profile.d/æ–‡ä»¶ä¸‹æ–°å»ºjava.shæ–‡ä»¶
         [work@localhost local]$ vim /etc/profile.d/java.sh
-        Ìí¼ÓÄÚÈİÈçÏÂ£º
+        æ·»åŠ å†…å®¹å¦‚ä¸‹ï¼š
 
-        #set java »·¾³±äÁ¿
+        #set java ç¯å¢ƒå˜é‡
         JAVA_HOME=/home/work/usr/local/jdk
         PATH=$PATH:/$JAVA_HOME/bin
         CLASSPATH=.:$JAVA_HOME/lib
         JRE_HOME=$JAVA_HOME/jre
         export JAVA_HOME PATH CLASSPATH JRE_HOME
 
-    1.3  ÉèÖÃjavaºÍjavacµÄ·ûºÅÁ¬½Ó£¬
+    1.3  è®¾ç½®javaå’Œjavacçš„ç¬¦å·è¿æ¥ï¼Œ
         [work@localhost local]#cd /usr/bin
         [work@localhost local]#su root      
         [root@localhost bin]# ln -s -f /home/work/usr/local/jdk/jre/bin/java
         [root@localhost bin]# ln -s -f /home/work/usr/local/jdk/bin/javac
 
-    JDK°²×°Íê³É£¬ÓĞÎÊÌâÇë²Î¿¼£ºhttp://jiarry.bokee.com/2425368.html
+    JDKå®‰è£…å®Œæˆï¼Œæœ‰é—®é¢˜è¯·å‚è€ƒï¼šhttp://jiarry.bokee.com/2425368.html
 
-2.  Tomcat°²×°
-    2.1  ½âÑ¹ºóÒÆ¶¯ÎÄ¼ş¼Ğµ½Ö¸¶¨Ä¿Â¼
+2.  Tomcatå®‰è£…
+    2.1  è§£å‹åç§»åŠ¨æ–‡ä»¶å¤¹åˆ°æŒ‡å®šç›®å½•
         [work@localhost webServer]$ tar -zxvf apache-tomcat-6.0.16.tar.gz 
         [work@localhost webServer]$ mv apache-tomcat-6.0.16 /home/work/usr/local/
-    2.2  ÅäÖÃ»·¾³±äÁ¿
-        ±à¼­¸ÕĞÂ½¨µÄ/etc/profile.d/java.shÎÄ¼ş
+    2.2  é…ç½®ç¯å¢ƒå˜é‡
+        ç¼–è¾‘åˆšæ–°å»ºçš„/etc/profile.d/java.shæ–‡ä»¶
         TOMCAT_HOME = /home/work/usr/local/tomcat
         export JAVA_HOME PATH CLASSPATH JRE_HOME TOMCAT_HOME
 
-3.    ²âÊÔ°²×°
-    3.1   ¼ì²é»·¾³±äÁ¿ºÍjava°æ±¾        
+3.    æµ‹è¯•å®‰è£…
+    3.1   æ£€æŸ¥ç¯å¢ƒå˜é‡å’Œjavaç‰ˆæœ¬        
         [work@localhost ~]$ echo $JAVA_HOME            
                 /home/work/usr/local/jdk
         [work@localhost ~]$ echo $PATH
-                Êä³öµÄº¬ÓĞ/home/work/usr/local/jdk/bin:
+                è¾“å‡ºçš„å«æœ‰/home/work/usr/local/jdk/bin:
         [work@localhost ~]$ echo $CLASSPATH
                 .:/home/work/usr/local/jdk/lib
         [work@localhost ~]$ echo $TOMCAT_HOME
                 /home/work/usr/local/tomcat
         [work@localhost ~]$ java -version
 
-    3.2   Æô¶¯tomcat
+    3.2   å¯åŠ¨tomcat
         [work@localhost local]$ sh /home/work/usr/local/tomcat/bin/startup.sh
-        ÔÚä¯ÀÀÆ÷µØÖ·À¸ÊäÈë    http://localhost:8080/  
+        åœ¨æµè§ˆå™¨åœ°å€æ è¾“å…¥    http://localhost:8080/  
 
-    3.3  ¸øTomcatÌí¼ÓÏîÄ¿
-        3.3.1  ĞŞ¸Ätomcat/conf/server.xml£º
+    3.3  ç»™Tomcatæ·»åŠ é¡¹ç›®
+        3.3.1  ä¿®æ”¹tomcat/conf/server.xmlï¼š
 
         <Context path="/test" reloadable="true" docBase="/home/work/dev/test"
     workDir="/home/work/usr/local/tomcat/work/test" />              
 
-        3.3.2  ¿ªÆôÄ¿Â¼ä¯ÀÀ£º
+        3.3.2  å¼€å¯ç›®å½•æµè§ˆï¼š
         <param-name>listings</param-name>
             <param-value>true</param-value>
 
-        3.3.3  ¿ªÆôservletÖ±½Ó·ÃÎÊ£¬´ò¿ª×¢ÊÍ
+        3.3.3  å¼€å¯servletç›´æ¥è®¿é—®ï¼Œæ‰“å¼€æ³¨é‡Š
         <servlet-name>invoker</servlet-name>
             <servlet-class>
               org.apache.catalina.servlets.InvokerServlet
             </servlet-class>
-        »¹ÓĞÕâ¶Î
+        è¿˜æœ‰è¿™æ®µ
         <servlet-mapping>
             <servlet-name>invoker</servlet-name>
         
-        context.xmlÎÄ¼şÀï<Context>Ôö¼Óprivileged
+        context.xmlæ–‡ä»¶é‡Œ<Context>å¢åŠ privileged
         <Context privileged="true">
 
-SETP 3 MySqlÓëJDBC connector
-1.  ½âÑ¹Ëõmysql-5.0.51a-linux-i686.tar.gz
+SETP 3 MySqlä¸JDBC connector
+1.  è§£å‹ç¼©mysql-5.0.51a-linux-i686.tar.gz
     [work@localhost webServer]$ tar -zxvf mysql-5.0.51a-linux-i686.tar.gz 
     [work@localhost webServer]$ mv mysql-5.0.51a-linux-i686 /home/work/usr/local/
 
-2. ²ÎÕÕINSTALL-BINARYÎÄ¼ş°²×°mysql
-    2.1  ½¨Á¢Ò»¸ömysql·ûºÅÁ¬½Ó
+2. å‚ç…§INSTALL-BINARYæ–‡ä»¶å®‰è£…mysql
+    2.1  å»ºç«‹ä¸€ä¸ªmysqlç¬¦å·è¿æ¥
     [work@localhost local]$ cd /home/work/usr/local/
     [root@localhost local]# ln -s mysql-5.0.51a-linux-i686 mysql
     [work@localhost local]$ su root
@@ -107,25 +107,25 @@ SETP 3 MySqlÓëJDBC connector
     [root@localhost ~]# groupadd mysql
     [root@localhost ~]# useradd -g mysql mysql
 
-    »Øµ½/home/work/usr/local/mysql/£¬¸ü¸ÄÄ¿Â¼ËùÊôÎªmysql
+    å›åˆ°/home/work/usr/local/mysql/ï¼Œæ›´æ”¹ç›®å½•æ‰€å±ä¸ºmysql
     [root@localhost ~]# cd /home/work/usr/local/mysql/    
     [root@localhost mysql]# chown -R mysql .
     [root@localhost mysql]# chgrp -R mysql .
 
-    Ö´ĞĞ½Å±¾Éú³ÉmysqlÏµÍ³Êı¾İ¿â
+    æ‰§è¡Œè„šæœ¬ç”Ÿæˆmysqlç³»ç»Ÿæ•°æ®åº“
     [root@localhost mysql]# scripts/mysql_install_db  --user=mysql
 
     Installing MySQL system tables...
     OK
     Filling help tables...
     OK
-    ¡­¡­
-    ³öÏÖ³É¹¦ÌáÊ¾Ö®ºó£¬ÊÚÈ¨·µ»¹¸øwork£¬µ«ÊÇdataÄ¿Â¼ÈÔÈ»¸ømysqlÕËºÅ    
+    â€¦â€¦
+    å‡ºç°æˆåŠŸæç¤ºä¹‹åï¼Œæˆæƒè¿”è¿˜ç»™workï¼Œä½†æ˜¯dataç›®å½•ä»ç„¶ç»™mysqlè´¦å·    
 
     [root@localhost mysql]# chown -R work . 
     [root@localhost mysql]# chown -R mysql data
 
-    2.2  ¿´/var/run/ÊÇ·ñÓĞmysqldÄ¿Â¼£¬Èç¹ûÃ»ÓĞ¾ÍĞÂ½¨¡£
+    2.2  çœ‹/var/run/æ˜¯å¦æœ‰mysqldç›®å½•ï¼Œå¦‚æœæ²¡æœ‰å°±æ–°å»ºã€‚
     [root@localhost mysql]# cd  /var/run/mysqld
     [root@localhost run]# mkdir mysqld
     [root@localhost mysqld]# cd mysqld
@@ -134,19 +134,19 @@ SETP 3 MySqlÓëJDBC connector
     [root@localhost mysql]#su mysql    
     [mysql@localhost mysql]$ vi /var/run/mysqld/mysqld.pid
 
-    ²é¿´/tmp/ÏÂÊÇ·ñÓĞmysql.sockÎÄ¼ş£¬°Ñ/home/mysql/mysql.sock×ö¸ö·ûºÅÁ¬½Óµ½/tmp/ÁÙÊ±ÎÄ¼ş¼ĞÏÂ
+    æŸ¥çœ‹/tmp/ä¸‹æ˜¯å¦æœ‰mysql.sockæ–‡ä»¶ï¼ŒæŠŠ/home/mysql/mysql.sockåšä¸ªç¬¦å·è¿æ¥åˆ°/tmp/ä¸´æ—¶æ–‡ä»¶å¤¹ä¸‹
     [root@localhost mysql]# ln -s /home/mysql/mysql.sock /tmp/mysql.sock
     [root@localhost tmp]# chown -R mysql mysql.sock 
     [root@localhost tmp]# chgrp -R mysql mysql.sock
 
-    Ò²¿ÉÒÔ²é¿´Ò»ÏÂ/etc/my.cnf£¬¼ì²éÅäÖÃ
+    ä¹Ÿå¯ä»¥æŸ¥çœ‹ä¸€ä¸‹/etc/my.cnfï¼Œæ£€æŸ¥é…ç½®
     [root@localhost tmp]# cat /etc/my.cnf 
 
-    2.3  Æô¶¯mysql·şÎñ
+    2.3  å¯åŠ¨mysqlæœåŠ¡
     [root@localhost mysql]# bin/mysqld_safe --user=mysql &
     [root@localhost mysql]# Starting mysqld daemon with databases from /var/lib/mysql
 
-    Æô¶¯³É¹¦ºó£¬²é¿´Ò»ÏÂmysqlµÄ½ø³Ì£º
+    å¯åŠ¨æˆåŠŸåï¼ŒæŸ¥çœ‹ä¸€ä¸‹mysqlçš„è¿›ç¨‹ï¼š
     [root@localhost mysql]# ps -el | grep mysqld
     4 S     0 14213 13164  0  84   0 -  1171 wait   pts/0    00:00:00 mysqld_safe
     4 S   502 14241 14213  0  85   0 -  8223 -      pts/0    00:00:00 mysqld
@@ -155,25 +155,25 @@ SETP 3 MySqlÓëJDBC connector
     [root@localhost tmp]# netstat -na | grep 3306
     tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      
 
-    2.4  µÇÂ¼mysqlÊÔÒ»ÏÂ£¬¿ÉÓÃÆäËûÕË»§
+    2.4  ç™»å½•mysqlè¯•ä¸€ä¸‹ï¼Œå¯ç”¨å…¶ä»–è´¦æˆ·
     [root@localhost mysql]# su work
     [work@localhost mysql]$ cd /home/work/usr/local/mysql/
-    [work@localhost mysql]$ bin/mysql -uroot -pÃÜÂë    
+    [work@localhost mysql]$ bin/mysql -uroot -på¯†ç     
 
-    2.5  ÅäÖÃ×Ô¶¯Æô¶¯
+    2.5  é…ç½®è‡ªåŠ¨å¯åŠ¨
     [root@localhost mysql]# cp support-files/mysql.server /etc/rc.d/init.d/mysqld
     [root@localhost mysql]# chmod 777 /etc/init.d/mysqld 
     [root@localhost init.d]# su -
     [root@localhost ~]# chkconfig --add mysqld
 
-    mysqlÅäÖÃÍê³É¡£
+    mysqlé…ç½®å®Œæˆã€‚
 
-3. mysql-connector-java°²×°
-    3.1  ½âÑ¹Ëõ£¬°ÑjarÎÄ¼şÒÆµ½tomcat libÄ¿Â¼ÏÂ    
+3. mysql-connector-javaå®‰è£…
+    3.1  è§£å‹ç¼©ï¼ŒæŠŠjaræ–‡ä»¶ç§»åˆ°tomcat libç›®å½•ä¸‹    
     [work@localhost webServer]$ tar -zxvf mysql-connector-java-5.1.6.tar.gz 
     [work@localhost webServer]$ cp mysql-connector-java-5.1.6/mysql-connector-java-5.1.6-bin.jar /home/work/usr/local/tomcat/lib/
-    3.2   ÅäÖÃÊı¾İ³ØÁ¬½Ó
-        3.2 .1  ĞŞ¸Ätomcat/conf/server.xml£¬¶ÔÔ­À´testÏîÄ¿½øĞĞĞŞ¸Ä£¬Ìí¼ÓÊı¾İ³ØÅäÖÃ
+    3.2   é…ç½®æ•°æ®æ± è¿æ¥
+        3.2 .1  ä¿®æ”¹tomcat/conf/server.xmlï¼Œå¯¹åŸæ¥testé¡¹ç›®è¿›è¡Œä¿®æ”¹ï¼Œæ·»åŠ æ•°æ®æ± é…ç½®
      <Context path="/test" docBase="/home/work/dev/test"
         debug="5" reloadable="true" crossContext="true"  workDir="/home/work/usr/local/tomcat/work/test">
   <Resource  name="jdbc/test"
@@ -185,7 +185,7 @@ SETP 3 MySqlÓëJDBC connector
     url="jdbc:mysql://localhost:3306/test_db_name?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8"/>
  </Context> 
 
-        3.2 .2  ÔÚ/home/work/dev/test/ÏÂ½¨Á¢WEB-INF/web.xmlÎÄ¼ş£¬¼ÓÈëÈçÏÂÄÚÈİ£º
+        3.2 .2  åœ¨/home/work/dev/test/ä¸‹å»ºç«‹WEB-INF/web.xmlæ–‡ä»¶ï¼ŒåŠ å…¥å¦‚ä¸‹å†…å®¹ï¼š
     <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
@@ -200,45 +200,45 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
   </resource-ref>
   </web-app> 
 
-   3.2.3 ½¨Á¢Ò»¸ö²âÊÔÎÄ¼ş
+   3.2.3 å»ºç«‹ä¸€ä¸ªæµ‹è¯•æ–‡ä»¶
    <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
     <%@ page import="java.sql.*"%>
     <%@ page import="javax.sql.*"%>
     <%@ page import="javax.naming.*"%>
-     Êı¾İ¿âÁ¬½Ó³Ø²âÊÔ½á¹û£º
+     æ•°æ®åº“è¿æ¥æ± æµ‹è¯•ç»“æœï¼š
      <%
-     out.println("JDBCÇı¶¯¼ì²é<br>");
+     out.println("JDBCé©±åŠ¨æ£€æŸ¥<br>");
      try {
       Class.forName("com.mysql.jdbc.Driver");
-      out.println("¼ì²é³É¹¦£¡<br>");
+      out.println("æ£€æŸ¥æˆåŠŸï¼<br>");
      } catch (ClassNotFoundException cnfe) {
-      out.println("JDBCÇı¶¯´´½¨Ê§°Ü£¡<br>");
+      out.println("JDBCé©±åŠ¨åˆ›å»ºå¤±è´¥ï¼<br>");
       cnfe.printStackTrace();
      }    
-      out.println("<br>»·¾³ÃüÃû¿Õ¼ä¼ì²é<br>");
+      out.println("<br>ç¯å¢ƒå‘½åç©ºé—´æ£€æŸ¥<br>");
      try {
         javax.naming.Context ctx = new javax.naming.InitialContext();
       javax.naming.Context envContext =
        (javax.naming.Context) ctx.lookup("java:/comp/env");
-      out.println("¼ì²é³É¹¦£¡<br>");      
-      out.println("<br>²éÕÒÊı¾İÔ´<br>");
+      out.println("æ£€æŸ¥æˆåŠŸï¼<br>");      
+      out.println("<br>æŸ¥æ‰¾æ•°æ®æº<br>");
          // org.apache.commons.dbcp.BasicDataSource ds =
          //   (org.apache.commons.dbcp.BasicDataSource) envContext.lookup("jdbc/test");
       DataSource ds =(DataSource)ctx.lookup("java:comp/env/jdbc/test");
-      out.println("²éÕÒ³É¹¦!<br>");
+      out.println("æŸ¥æ‰¾æˆåŠŸ!<br>");
     } catch (javax.naming.NamingException e) {
-      out.println("»·¾³±äÁ¿ÉÏÏÂÎÄ´´½¨Ê§°Ü£¡<br>");
+      out.println("ç¯å¢ƒå˜é‡ä¸Šä¸‹æ–‡åˆ›å»ºå¤±è´¥ï¼<br>");
       e.printStackTrace();
      }
    %>
 
-        ²Î¿¼:http://jiarry.bokee.com/6234733.html
+        å‚è€ƒ:http://jiarry.bokee.com/6234733.html
         http://tomcat.apache.org/tomcat-6.0-doc/jndi-datasource-examples-howto.html
     
-SETP 4 Apache°²×°ÅäÖÃ
-        1  ½âÑ¹ËõApache£¬
+SETP 4 Apacheå®‰è£…é…ç½®
+        1  è§£å‹ç¼©Apacheï¼Œ
         [work@localhost webServer]$ tar -zxvf httpd-2.2.9.tar.gz 
-        ¿ÉÒÔ°ÑµÃµ½µÄÎÄ¼ş¼ĞÒÆ¶¯µ½°²×°Ä¿Â¼£¬±ÈÈç/home/work/software/ÏÂ£¬ÕâÀï·ÅÔÚ/home/work/software/webServer/
+        å¯ä»¥æŠŠå¾—åˆ°çš„æ–‡ä»¶å¤¹ç§»åŠ¨åˆ°å®‰è£…ç›®å½•ï¼Œæ¯”å¦‚/home/work/software/ä¸‹ï¼Œè¿™é‡Œæ”¾åœ¨/home/work/software/webServer/
         [work@localhost webServer]$ cd httpd-2.2.9
         [work@localhost httpd-2.2.9]$ ./configure --help 
         [work@localhost httpd-2.2.9]$ ./configure --prefix=/home/work/usr/local/apache2 --enable-mods-shared=all 
@@ -247,13 +247,13 @@ SETP 4 Apache°²×°ÅäÖÃ
         [work@localhost httpd-2.2.9]$ cd /home/work/usr/local/apache2
         [root@localhost apache2]# su root
         [work@localhost apache2]$ bin/apachectl start
-        ±àÒë°²×°--enable-so-mods-shared=allĞÂ°æµÄ°²×°ÎÄµµÀïÃ»ÓĞÌáÊ¾ĞèÒª¼ÓÔØ£¬Ö±½Ó./configure --prefix=/home/work/usr/local/apache2¼´¿É
-        °²×°¹ı³ÌÒª2·ÖÖÓÊ±¼ä£¬Íê³Éºó£¬ÇĞ»»µ½rootÕËºÅÆô¶¯Apache
-        ÔÚµØÖ·À¸ÊäÈëhttp://localhost/£¬¿´µ½ it works»¶Ó­Ò³±íÊ¾³É¹¦
-        ²ÎÕÕ£ºhttp://httpd.apache.org/docs/2.2/install.html
+        ç¼–è¯‘å®‰è£…--enable-so-mods-shared=allæ–°ç‰ˆçš„å®‰è£…æ–‡æ¡£é‡Œæ²¡æœ‰æç¤ºéœ€è¦åŠ è½½ï¼Œç›´æ¥./configure --prefix=/home/work/usr/local/apache2å³å¯
+        å®‰è£…è¿‡ç¨‹è¦2åˆ†é’Ÿæ—¶é—´ï¼Œå®Œæˆåï¼Œåˆ‡æ¢åˆ°rootè´¦å·å¯åŠ¨Apache
+        åœ¨åœ°å€æ è¾“å…¥http://localhost/ï¼Œçœ‹åˆ° it worksæ¬¢è¿é¡µè¡¨ç¤ºæˆåŠŸ
+        å‚ç…§ï¼šhttp://httpd.apache.org/docs/2.2/install.html
 
-        2  ÅäÖÃapache/conf/http.conf
-        #Ìí¼ÓtestÏîÄ¿
+        2  é…ç½®apache/conf/http.conf
+        #æ·»åŠ testé¡¹ç›®
         Alias /ut "/home/work/dev/test"
         <Directory "/home/work/dev/test">
         Options Indexes FollowSymLinks MultiViews Includes ExecCGI
@@ -262,30 +262,30 @@ SETP 4 Apache°²×°ÅäÖÃ
         Allow from all
         </Directory>
 
-        #½ûÖ¹·ÃÎÊWEB-INFÎÄ¼ş¼Ğ
+        #ç¦æ­¢è®¿é—®WEB-INFæ–‡ä»¶å¤¹
         <Directory  "/home/work/dev/test/WEB-INF">
        Order allow,deny
         </Directory> 
 
-        ´ò¿ª×¢ÊÍÅäÖÃÓïÑÔ£¬¿ÉÒÔÉèÖÃÄ¬ÈÏÖĞÎÄ
+        æ‰“å¼€æ³¨é‡Šé…ç½®è¯­è¨€ï¼Œå¯ä»¥è®¾ç½®é»˜è®¤ä¸­æ–‡
         Include conf/extra/httpd-languages.conf
 
-        ÔÚextra/httpd-languages.confÔö¼ÓÈçÏÂ´úÂë£º
+        åœ¨extra/httpd-languages.confå¢åŠ å¦‚ä¸‹ä»£ç ï¼š
         DefaultLanguage zh-CN
        AddDefaultCharset gb2312
 
-        3  ´ò¿ªä¯ÀÀÆ÷ÊäÈëhttp://localhost/test/ ÊÇ·ñÄÜ¿´µ½Ä¿Â¼ÁĞ±íÄØ£¬·ÃÎÊ²âÊÔ¡£
-            Èç¹ûÓöµ½½ûÖ¹·ÃÎÊ£¬ÔòĞèÒªÊÚÈ¨ [work@localhost ut]$ chmod 777 * 
+        3  æ‰“å¼€æµè§ˆå™¨è¾“å…¥http://localhost/test/ æ˜¯å¦èƒ½çœ‹åˆ°ç›®å½•åˆ—è¡¨å‘¢ï¼Œè®¿é—®æµ‹è¯•ã€‚
+            å¦‚æœé‡åˆ°ç¦æ­¢è®¿é—®ï¼Œåˆ™éœ€è¦æˆæƒ [work@localhost ut]$ chmod 777 * 
 
-SETP 5 jk_modÕûºÏApacheÓëTomcat    
-    1  °ÑÏÂÔØµ½µÄ¶ş½øÖÆÎÄ¼şmod_jk-1.2.26-httpd-2.2.6.so¸´ÖÆµ½apacheµÄmodulesÄ¿Â¼ÏÂ
-    ÏÂÔØµØÖ·£º¡¡http://apache.mirror.phpchina.com/tomcat/tomcat-connectors/jk/binaries/linux/jk-1.2.26/
+SETP 5 jk_modæ•´åˆApacheä¸Tomcat    
+    1  æŠŠä¸‹è½½åˆ°çš„äºŒè¿›åˆ¶æ–‡ä»¶mod_jk-1.2.26-httpd-2.2.6.soå¤åˆ¶åˆ°apacheçš„modulesç›®å½•ä¸‹
+    ä¸‹è½½åœ°å€ï¼šã€€http://apache.mirror.phpchina.com/tomcat/tomcat-connectors/jk/binaries/linux/jk-1.2.26/
     
-    2  ÔÚApacheµÄconfÄ¿Â¼ĞÂ½¨Á¢Á½¸öÎÄ¼ş£¬mod_jk.confºÍworkers.propertiesÎÄ¼ş£¬ÅäÖÃ¹ı³ÌÓëwindows»ù±¾Ò»Ñù¡£
-        mod_jk.confµÄÄÚÈİÊÇjkµÄÅäÖÃÎÄ¼ş£¬°üÀ¨×°ÔØÄ£¿éºÍÈÕÖ¾ĞÅÏ¢ÒÔ¼°Ö¸¶¨½âÎöµÄ¹¤×÷Æ÷ºÍÄ¿Â¼£¬workers.propertiesÊÇTomcat wokersµÄÅäÖÃÎÄ¼ş¡£
+    2  åœ¨Apacheçš„confç›®å½•æ–°å»ºç«‹ä¸¤ä¸ªæ–‡ä»¶ï¼Œmod_jk.confå’Œworkers.propertiesæ–‡ä»¶ï¼Œé…ç½®è¿‡ç¨‹ä¸windowsåŸºæœ¬ä¸€æ ·ã€‚
+        mod_jk.confçš„å†…å®¹æ˜¯jkçš„é…ç½®æ–‡ä»¶ï¼ŒåŒ…æ‹¬è£…è½½æ¨¡å—å’Œæ—¥å¿—ä¿¡æ¯ä»¥åŠæŒ‡å®šè§£æçš„å·¥ä½œå™¨å’Œç›®å½•ï¼Œworkers.propertiesæ˜¯Tomcat wokersçš„é…ç½®æ–‡ä»¶ã€‚
 
-    3  ÔÚmod_jk.confÀï¼ÓÈëÒÔÏÂÄÚÈİ(mod_jk.confÎÄ¼şÊÇ·½±ã¹ÜÀí£¬¶ø²»ĞèÒª°ÑÅäÖÃ¶¼Ğ´ÔÚhttpd.confÀï)
-        #¼ÓÔØjkÄ£¿é£¬Ãû×ÖÒª¶ÔÓ¦
+    3  åœ¨mod_jk.confé‡ŒåŠ å…¥ä»¥ä¸‹å†…å®¹(mod_jk.confæ–‡ä»¶æ˜¯æ–¹ä¾¿ç®¡ç†ï¼Œè€Œä¸éœ€è¦æŠŠé…ç½®éƒ½å†™åœ¨httpd.confé‡Œ)
+        #åŠ è½½jkæ¨¡å—ï¼Œåå­—è¦å¯¹åº”
         LoadModule jk_module modules/mod_jk-1.2.26-httpd-2.2.6.so  
         JkWorkersFile conf/workers.properties
         JkLogFile logs/mod_jk.log
@@ -299,15 +299,15 @@ SETP 5 jk_modÕûºÏApacheÓëTomcat
         JkMount /servlet/* ajp13     
         JkMount /*.jsp ajp13
         JkMount /*.do ajp13     
-        # JkMount ±íÊ¾Ê¹ÓÃTomcatÀ´½âÎö£¬ JkUnMountÔòÏà·´
+        # JkMount è¡¨ç¤ºä½¿ç”¨Tomcatæ¥è§£æï¼Œ JkUnMountåˆ™ç›¸å
          #JkAutoAlias /home/work/dev/test/*  
         JkMount /test/servlet/* ajp13    
-        #/test/servlet/ÏÂËùÓĞµÄÎÄ¼şÒ²½»¸øTomcat´¦Àí
+        #/test/servlet/ä¸‹æ‰€æœ‰çš„æ–‡ä»¶ä¹Ÿäº¤ç»™Tomcatå¤„ç†
 
-    4  ±à¼­ApacheµÄhttpd.confÎÄ¼ş£¬Ìí¼Ó£º
+    4  ç¼–è¾‘Apacheçš„httpd.confæ–‡ä»¶ï¼Œæ·»åŠ ï¼š
         Include conf/mod_jk.conf
 
-    5  ±à¼­workers.propertiesÎÄ¼ş£¬Ìí¼Ó£º
+    5  ç¼–è¾‘workers.propertiesæ–‡ä»¶ï¼Œæ·»åŠ ï¼š
         workers.tomcat_home=/home/work/usr/local/tomcat/
         workers.java_home=/home/work/usr/local/jdk/
         ps=\
@@ -316,83 +316,83 @@ SETP 5 jk_modÕûºÏApacheÓëTomcat
         worker.ajp13.host=localhost
         worker.ajp13.type=ajp13
         worker.ajp13.lbfactor=1
-        #Èç¹ûÃ»ÓĞ×¨ÃÅµÄÅäÖÃ£¬Ò²¿ÉÒÔ²»Ìí¼ÓÕâĞ©ÄÚÈİ£¬¿ÕÎÄ¼ş»òÕß²»Òª¸ÃÒ²¿ÉÒÔ
+        #å¦‚æœæ²¡æœ‰ä¸“é—¨çš„é…ç½®ï¼Œä¹Ÿå¯ä»¥ä¸æ·»åŠ è¿™äº›å†…å®¹ï¼Œç©ºæ–‡ä»¶æˆ–è€…ä¸è¦è¯¥ä¹Ÿå¯ä»¥
     
-    7   ÖØÆôApache²âÊÔ
+    7   é‡å¯Apacheæµ‹è¯•
         [work@localhost modules]$ su -c '/home/work/usr/local/apache2/bin/apachectl restart'
-        ´ò¿ªä¯ÀÀÆ÷£¬·Ö±ğÍ¨¹ıÒÔÏÂÁ½¸öµØÖ··ÃÎÊjspÎÄ¼ş£¬Èç¹û¾ùÄÜÕı³£½âÎö±íÊ¾ÕûºÏ³É¹¦£¬¸ù¾İÖ®Ç°ApacheºÍTomcatµÄÅäÖÃ£¬testÖ¸ÏòÍ¬Ò»¸öÄ¿Â¼
-        http://localhost/test/ ¡¡
+        æ‰“å¼€æµè§ˆå™¨ï¼Œåˆ†åˆ«é€šè¿‡ä»¥ä¸‹ä¸¤ä¸ªåœ°å€è®¿é—®jspæ–‡ä»¶ï¼Œå¦‚æœå‡èƒ½æ­£å¸¸è§£æè¡¨ç¤ºæ•´åˆæˆåŠŸï¼Œæ ¹æ®ä¹‹å‰Apacheå’ŒTomcatçš„é…ç½®ï¼ŒtestæŒ‡å‘åŒä¸€ä¸ªç›®å½•
+        http://localhost/test/ ã€€
         http://localhost:8080/test/ 
 
-        ÕâÑù£¬£ÁpacheÓëTomcat¼ÓJk_mod¾ÍÕûÀíÍê³ÉÁË¡£
-        ÅäÖÃÎÄ¼şÏê½â£º
+        è¿™æ ·ï¼Œï¼¡pacheä¸TomcatåŠ Jk_modå°±æ•´ç†å®Œæˆäº†ã€‚
+        é…ç½®æ–‡ä»¶è¯¦è§£ï¼š
         http://tomcat.apache.org/connectors-doc/reference/apache.html
 
-SETP 5 °²×°PHP
-        1  ÏÈÒª°²×°zlib£¬libpngºÍlibxml¡¢gd2¿âµÈ£¬ÒÔ±ãÖ§³ÖÍ¼ĞÎ¿âµÈ£¬¿ÉÒÔ¸ù¾İĞèÒªÀ´Ñ¡×°¡£
-            ÏÂÔØµØÖ·£º
-            1)zlib£º            http://www.zlib.net/
-            2)libpng£º         http://www.libpng.org/pub/png/libpng.html
-            3)libxml2£º         ftp://xmlsoft.org/libxml2/
-            4)libtiff£º         ftp://ftp.remotesensing.org/pub/libtiff/
-            5)jpegsrc£º         ftp://ftp.uu.net/graphics/jpeg/
-            6)freetype2£º     http://freetype.sourceforge.net/download.html
-            7)gd2£º             http://www.libgd.org/Downloads
+SETP 5 å®‰è£…PHP
+        1  å…ˆè¦å®‰è£…zlibï¼Œlibpngå’Œlibxmlã€gd2åº“ç­‰ï¼Œä»¥ä¾¿æ”¯æŒå›¾å½¢åº“ç­‰ï¼Œå¯ä»¥æ ¹æ®éœ€è¦æ¥é€‰è£…ã€‚
+            ä¸‹è½½åœ°å€ï¼š
+            1)zlibï¼š            http://www.zlib.net/
+            2)libpngï¼š         http://www.libpng.org/pub/png/libpng.html
+            3)libxml2ï¼š         ftp://xmlsoft.org/libxml2/
+            4)libtiffï¼š         ftp://ftp.remotesensing.org/pub/libtiff/
+            5)jpegsrcï¼š         ftp://ftp.uu.net/graphics/jpeg/
+            6)freetype2ï¼š     http://freetype.sourceforge.net/download.html
+            7)gd2ï¼š             http://www.libgd.org/Downloads
             8)openssl:        http://www.openssl.org/source/
             
-            Õâ¼¸¸öPHPµÄ¿â°²×°·½Ê½¶¼ÊÇÒ»ÖÂµÄ£¬ÃüÁîÈçÏÂ£º
+            è¿™å‡ ä¸ªPHPçš„åº“å®‰è£…æ–¹å¼éƒ½æ˜¯ä¸€è‡´çš„ï¼Œå‘½ä»¤å¦‚ä¸‹ï¼š
             ./configure [--prefix=/path]
             make check
             make install
 
-            1.1  zlib°²×°£º
+            1.1  zlibå®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf zlib-1.2.3.tar.gz 
             [work@localhost php_lib]$ cd zlib-1.2.3
             [work@localhost zlib-1.2.3]$ ./configure --prefix=/home/work/usr/local/zlib/
             [work@localhost zlib-1.2.3]$ make
             [work@localhost zlib-1.2.3]$ make install
 
-            1..2  libpng°²×°£º
+            1..2  libpngå®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf libpng-1.2.29.tar.gz 
             [work@localhost php_lib]$ cd libpng-1.2.29
             [work@localhost libpng-1.2.29]$ ./configure --prefix=/home/work/usr/local/libpng 
             [work@localhost libpng-1.2.29]$ make
             [work@localhost libpng-1.2.29]$ make install
             
-            1.3  libxml2°²×°£º
+            1.3  libxml2å®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf libxml2-2.6.32.tar.gz 
             [work@localhost php_lib]$ cd libxml2-2.6.32
             [work@localhost libxml2-2.6.32]$ ./configure --prefix=/home/work/usr/local/libxml2
             [work@localhost libxml2-2.6.32]$ make
             [work@localhost libxml2-2.6.32]$ make install            
 
-            1..4  libtiff°²×°£º
+            1..4  libtiffå®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf tiff-4.0.0beta2.tar.gz 
             [work@localhost php_lib]$ cd tiff-4.0.0beta2
             [work@localhost tiff-4.0.0beta2]$ ./configure --prefix=/home/work/usr/local/tiff
             [work@localhost tiff-4.0.0beta2]$ make
             [work@localhost tiff-4.0.0beta2]$ make install    
 
-            1.5  jpegsrc°²×°£º
+            1.5  jpegsrcå®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf jpegsrc.v6b.tar.gz 
             [work@localhost php_lib]$ cd jpeg-6b/
             [work@localhost jpeg-6b]$ ./configure --prefix=/home/work/usr/local/jpeg/ --enable-shared --enable-static
             [work@localhost jpeg-6b]$ make
             [work@localhost jpeg-6b]$ make install
 
-            (ÌáÊ¾/home/work/usr/local/jpeg/Ã»ÓĞbin/cjpegºÍmanÎÄ¼ş¼Ğ£¬¸ù¾İÌáÊ¾À´·Ö±ğ´´½¨¼´¿É£¬ÔÙÖ´ĞĞmake instal¾ÍokÁË
+            (æç¤º/home/work/usr/local/jpeg/æ²¡æœ‰bin/cjpegå’Œmanæ–‡ä»¶å¤¹ï¼Œæ ¹æ®æç¤ºæ¥åˆ†åˆ«åˆ›å»ºå³å¯ï¼Œå†æ‰§è¡Œmake instalå°±okäº†
             [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/bin/
             [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/bin/cjpeg
             [work@localhost jpeg-6b]$ mkdir /home/work/usr/local/jpeg/man/)
 
-            1.6  FreeType°²×°£º
+            1.6  FreeTypeå®‰è£…ï¼š
             [work@localhost php_lib]$ tar -zxvf freetype-2.3.6.tar.gz 
             [work@localhost php_lib]$ cd freetype-2.3.6/
             [work@localhost freetype-2.3.6]$ ./configure --prefix=/home/work/usr/local/freetype2
             [work@localhost freetype-2.3.6]$ make
             [work@localhost freetype-2.3.6]$ make install
 
-            1.7  gd2°²×°£º
+            1.7  gd2å®‰è£…ï¼š
             [work@localhost php_lib]$ tar -jxvf gd-2.0.35.tar.bz2 
             [work@localhost php_lib]$ cd gd-2.0.35
             [work@localhost gd-2.0.35]$ ./configure --prefix=/home/work/usr/local/gd2 \
@@ -403,8 +403,8 @@ SETP 5 °²×°PHP
             [work@localhost gd-2.0.35]$ make
             [work@localhost gd-2.0.35]$ make install
 
-            1.8  openssl°²×°£º
-            [work@localhost php_lib]$ tar -zxvf openssl-0.9.8g.tar.gz £¨ÕâÀïÓĞºÜ¶à°æ±¾£¬¿ÉÒÔÑ¡ÔñÒ»¸ö±È½ÏÎÈ¶¨µÄ°æ±¾£©
+            1.8  opensslå®‰è£…ï¼š
+            [work@localhost php_lib]$ tar -zxvf openssl-0.9.8g.tar.gz ï¼ˆè¿™é‡Œæœ‰å¾ˆå¤šç‰ˆæœ¬ï¼Œå¯ä»¥é€‰æ‹©ä¸€ä¸ªæ¯”è¾ƒç¨³å®šçš„ç‰ˆæœ¬ï¼‰
             [work@localhost php_lib]$ cd openssl-0.9.8g
             [work@localhost openssl-0.9.8g]$ ./config --prefix=/home/work/usr/local/openssl --openssldir=/home/work/usr/local/openssl shared
             [root@localhost openssl-0.9.8g]# make
@@ -413,15 +413,15 @@ SETP 5 °²×°PHP
             [root@localhost openssl]# cd /home/work/usr/local/openssl/
             [root@localhost openssl]# chown -R work:work openssl
 
-        2  Ö´ĞĞPHP°²×°
-            2.1  ½âÑ¹ËõPHP°ü£¬×ĞÏ¸ÔÄ¶ÁINSTALLÎÄ¼ş£¬°´ÕÕÌáÊ¾°²×°
+        2  æ‰§è¡ŒPHPå®‰è£…
+            2.1  è§£å‹ç¼©PHPåŒ…ï¼Œä»”ç»†é˜…è¯»INSTALLæ–‡ä»¶ï¼ŒæŒ‰ç…§æç¤ºå®‰è£…
             [work@localhost webServer]$ tar -jxvf php-5.2.6.tar.bz2 
             [work@localhost webServer]$ cd php-5.2.6
             [work@localhost php-5.2.6]$ cat INSTALL 
             
-            2.2  Ö´ĞĞ°²×°£¬ÔÚÃüÁîĞĞÈç£¬³ıapacheºÍmysql,gd¿â£¬ÆäËû¿ÉÒÔÑ¡×°£º
+            2.2  æ‰§è¡Œå®‰è£…ï¼Œåœ¨å‘½ä»¤è¡Œå¦‚ï¼Œé™¤apacheå’Œmysql,gdåº“ï¼Œå…¶ä»–å¯ä»¥é€‰è£…ï¼š
             ./configuare --prefix=/home/work/usr/local/php5 --enable-so \
-                             --with-apxs2=/home/work/usr/local/apache2/bin/apxs \ #¸ß°æ±¾ÒªĞ´³Éapxs2£¬°²×°Ç°½«apacheÍ£µô¡£
+                             --with-apxs2=/home/work/usr/local/apache2/bin/apxs \ #é«˜ç‰ˆæœ¬è¦å†™æˆapxs2ï¼Œå®‰è£…å‰å°†apacheåœæ‰ã€‚
                              --with-mysql=/home/work/usr/local/mysql \
                              --with-gd=/home/work/usr/local/gd2 \
                              --with-zlib=/home/work/usr/local/zlib \
@@ -431,67 +431,67 @@ SETP 5 °²×°PHP
                              --with-tiff-dir=/home/work/usr/local/tiff \    
                              --with-freetype-dri=/home/work/usr/local/freetype2 \    
                              --with-openssl=/home/work/usr/local/openssl    
-            ¿ÉÒÔ¸´ÖÆÏÂÃæµÄÃüÁîÈ¥ĞŞ¸Ä£º
+            å¯ä»¥å¤åˆ¶ä¸‹é¢çš„å‘½ä»¤å»ä¿®æ”¹ï¼š
             [work@localhost php-5.2.6]$ ./configure --prefix=/home/work/usr/local/php5 --with-apxs2=/home/work/usr/local/apache2/bin/apxs --with-mysql=/home/work/usr/local/mysql --with-gd=/home/work/usr/local/gd2/ --with-zlib=/home/work/usr/local/zlib/ --with-png-dir=/home/work/usr/local/libpng/ --with-libxml-dir=/home/work/usr/local/libxml2/ --with-jpeg-dir=/home/work/usr/local/jpeg/ --with-tiff-dir=/home/work/usr/local/tiff/ --with-freetype-dir=/home/work/usr/local/freetype2/ --with-openssl=/home/work/usr/local/openssl/
-            »áÓĞĞÅÏ¢ÌáÊ¾£¬ÈçÏÂ±íÊ¾°²×°³É¹¦£¬Èç¹ûÓĞ´íÎóÌáÊ¾£¬°´ÕÕÌáÊ¾È¥²éÕÒÔ­Òò
-            ¡­¡­
+            ä¼šæœ‰ä¿¡æ¯æç¤ºï¼Œå¦‚ä¸‹è¡¨ç¤ºå®‰è£…æˆåŠŸï¼Œå¦‚æœæœ‰é”™è¯¯æç¤ºï¼ŒæŒ‰ç…§æç¤ºå»æŸ¥æ‰¾åŸå› 
+            â€¦â€¦
             Thank you for using PHP.
-            ¡­¡­
+            â€¦â€¦
             [work@localhost php-5.2.6]$ make
-            [work@localhost php-5.2.6]$ make test    # °´ÍÆ¼öÏÈ²âÊÔÒ»ÏÂ
+            [work@localhost php-5.2.6]$ make test    # æŒ‰æ¨èå…ˆæµ‹è¯•ä¸€ä¸‹
             [work@localhost php-5.2.6]$ make install        
 
-            2.3  Ö´ĞĞ°²×°Ê±Óöµ½Ò»¸ö´íÎó(²»Í¬°æ±¾µÄLinux»áÓĞĞ©²îÒì)£¬ÈçÏÂ
+            2.3  æ‰§è¡Œå®‰è£…æ—¶é‡åˆ°ä¸€ä¸ªé”™è¯¯(ä¸åŒç‰ˆæœ¬çš„Linuxä¼šæœ‰äº›å·®å¼‚)ï¼Œå¦‚ä¸‹
             /home/work/usr/local/mysql/lib/libmysqlclient.so.15: cannot restore segment prot after reloc: Permission denied
-            ËÑË÷²éÁËÒ»ÏÂ£¬ÍøÉÏÓĞºÜ¶àÀàËÆµÄÎÊÌâ¡£    ½â¾ö·½°¸ÈçÏÂ£º
-            1)   ½ûÓÃ SELinux
+            æœç´¢æŸ¥äº†ä¸€ä¸‹ï¼Œç½‘ä¸Šæœ‰å¾ˆå¤šç±»ä¼¼çš„é—®é¢˜ã€‚    è§£å†³æ–¹æ¡ˆå¦‚ä¸‹ï¼š
+            1)   ç¦ç”¨ SELinux
             [root@localhost webServer]# vi /etc/selinux/config
-            ±à¼­/etc/selinux/config£¬°Ñ SELINUX=enforcing×¢ÊÍµô£¬È»ºóĞÂ¼ÓÒ»ĞĞSELINUX=disabled
+            ç¼–è¾‘/etc/selinux/configï¼ŒæŠŠ SELINUX=enforcingæ³¨é‡Šæ‰ï¼Œç„¶åæ–°åŠ ä¸€è¡ŒSELINUX=disabled
             [root@localhost webServer]# vim /etc/sysconfig/selinux 
-            ±à¼­/etc/sysconfig/selinux£¬°ÑSELINUX=enforcing×¢ÊÍµô£¬ĞÂ¼ÓÒ»ĞĞSELINUX=disabled
+            ç¼–è¾‘/etc/sysconfig/selinuxï¼ŒæŠŠSELINUX=enforcingæ³¨é‡Šæ‰ï¼Œæ–°åŠ ä¸€è¡ŒSELINUX=disabled
 
             2) chcon -t texrel_shlib_t
             [work@localhost ~]$ chcon -t texrel_shlib_t /home/work/usr/local/mysql/lib/libmysqlclient.so.15
-£¨/Â·¾¶/Â·¾¶/ÎÄ¼şÃû.so)
-            ²Î¿¼£º
+ï¼ˆ/è·¯å¾„/è·¯å¾„/æ–‡ä»¶å.so)
+            å‚è€ƒï¼š
             http://linux.chinaunix.net/bbs/thread-1001717-1-1.html
             http://www.phpwhy.com/read-htm-tid-5317.html
             http://bbs.chinaunix.net/viewthread.php?tid=1033055
 
-            2.4  ¸´ÖÆphp.iniÎÄ¼ş£¨ÕâÀïµÄPHP°²×°ÔÚworkÄ¿Â¼ÏÂ£¬Ä¬ÈÏPHP°²×°ÔÚ/usr/local/ÏÂ£¬ÈçÓÃµÄÄ¬ÈÏÄ¿Â¼¾Í°Ñphp.ini¸´ÖÆµ½/usr/local/lib/ÏÂ£©
+            2.4  å¤åˆ¶php.iniæ–‡ä»¶ï¼ˆè¿™é‡Œçš„PHPå®‰è£…åœ¨workç›®å½•ä¸‹ï¼Œé»˜è®¤PHPå®‰è£…åœ¨/usr/local/ä¸‹ï¼Œå¦‚ç”¨çš„é»˜è®¤ç›®å½•å°±æŠŠphp.iniå¤åˆ¶åˆ°/usr/local/lib/ä¸‹ï¼‰
             [work@localhost php-5.2.6]$ cp php.ini-dist /home/work/usr/local/php5/lib/php.ini
 
-        3  ĞŞ¸ÄApacheÀïµÄhttp.confÎÄ¼ş£¬ÕûºÏPHPÓëApache
+        3  ä¿®æ”¹Apacheé‡Œçš„http.confæ–‡ä»¶ï¼Œæ•´åˆPHPä¸Apache
             [work@localhost php-5.2.6]$ vi /home/work/usr/local/apache2/conf/httpd.conf
-            ²é¿´ÊÇ·ñÓĞ£ºLoadModule php5_module modules/libphp5.so
+            æŸ¥çœ‹æ˜¯å¦æœ‰ï¼šLoadModule php5_module modules/libphp5.so
 
-            Ìí¼ÓÒÔÏÂµ½<IfModule mime_module>ÖĞ
+            æ·»åŠ ä»¥ä¸‹åˆ°<IfModule mime_module>ä¸­
             AddType application/x-httpd-php .php
             AddType application/x-httpd-php-source .phps   
-            Æô¶¯Apache£º
-            ÌáÊ¾£º¡­¡­libphp5.so: cannot restore segment prot after reloc: Permission denied            
+            å¯åŠ¨Apacheï¼š
+            æç¤ºï¼šâ€¦â€¦libphp5.so: cannot restore segment prot after reloc: Permission denied            
             [work@localhost php-5.2.6]$ chcon -t texrel_shlib_t /home/work/usr/local/apache2/modules/libphp5.so
             [work@localhost php-5.2.6]$ su -c '/home/work/usr/local/apache2/bin/apachectl start'
             [work@localhost php-5.2.6]$ ps -ef | grep httpd
 
-        4 ²âÊÔ            
-            41.  ĞÂ½¨Ò»¸öinfo.phpÎÄ¼ş
+        4 æµ‹è¯•            
+            41.  æ–°å»ºä¸€ä¸ªinfo.phpæ–‡ä»¶
             <?php
                 echo phpinfo();
             ?>
 
-            42.  Èç¹ûÓöµ½½ûÖ¹·ÃÎÊµÄÌáÊ¾
+            42.  å¦‚æœé‡åˆ°ç¦æ­¢è®¿é—®çš„æç¤º
             Forbidden
             You don't have permission to access / on this server
-            ÔòÓĞ¼¸ÖÖ¿ÉÄÜ£º
-                1)   Ã»ÓĞ¸øÎÄ¼şÊÚÈ¨¡£ Í¨¹ı $ chmod 777 xxx.htmlÊÚÈ¨
-                2)  ¿´Apache http.confÀïµÄDocumentRootĞŞ¸ÄÁË£¬¶ø<Directory Ã»ÓĞÖ¸¶¨Â·¾¶»òÕßDeny from all£¬¶ø²»ÊÇAllow from All
-                3)  ±à¼­http.confÎÄ¼ş£¬ĞŞ¸ÄÓÃ»§ºÍ×é
-                    #User daemon ¸Ä³ÉÄã×Ô¼ºµÄÓÃ»§    User work
-                    #Group daemon ¸Ä³ÉÄã×Ô¼ºµÄÓÃ»§     Group work
-                4)  chcon -t texrel_shlib_t Ïà¹ØÎÄ¼ş£¬²Î¿¼ÉÏÃæ°²×°PHPµÄ²½Öè¡£
+            åˆ™æœ‰å‡ ç§å¯èƒ½ï¼š
+                1)   æ²¡æœ‰ç»™æ–‡ä»¶æˆæƒã€‚ é€šè¿‡ $ chmod 777 xxx.htmlæˆæƒ
+                2)  çœ‹Apache http.confé‡Œçš„DocumentRootä¿®æ”¹äº†ï¼Œè€Œ<Directory æ²¡æœ‰æŒ‡å®šè·¯å¾„æˆ–è€…Deny from allï¼Œè€Œä¸æ˜¯Allow from All
+                3)  ç¼–è¾‘http.confæ–‡ä»¶ï¼Œä¿®æ”¹ç”¨æˆ·å’Œç»„
+                    #User daemon æ”¹æˆä½ è‡ªå·±çš„ç”¨æˆ·    User work
+                    #Group daemon æ”¹æˆä½ è‡ªå·±çš„ç”¨æˆ·     Group work
+                4)  chcon -t texrel_shlib_t ç›¸å…³æ–‡ä»¶ï¼Œå‚è€ƒä¸Šé¢å®‰è£…PHPçš„æ­¥éª¤ã€‚
                 
-        5   Á¬½Ómysql£¬½¨Á¢Ò»¸öconnect.phpÎÄ¼ş£¬ÊäÈëÒÔÏÂ´úÂë£¬²âÊÔÄÜ·ñ¿´µ½Ğ§¹û¡£
+        5   è¿æ¥mysqlï¼Œå»ºç«‹ä¸€ä¸ªconnect.phpæ–‡ä»¶ï¼Œè¾“å…¥ä»¥ä¸‹ä»£ç ï¼Œæµ‹è¯•èƒ½å¦çœ‹åˆ°æ•ˆæœã€‚
             <pre>
             <?php
             $conn = mysql_connect("localhost", "root", "password");
@@ -502,11 +502,11 @@ SETP 5 °²×°PHP
               }
             ?>
             </pre>
-            Èç¹ûÄÜ¿´µ½Mysql Connect Successfully!±íÊ¾Á¬½Ó³É¹¦ÁË¡£
+            å¦‚æœèƒ½çœ‹åˆ°Mysql Connect Successfully!è¡¨ç¤ºè¿æ¥æˆåŠŸäº†ã€‚
 
-ÖÁ´Ë£¬Ò»¸öLinuxÏÂµÄÖ§³ÖJava¡¢PHPµÄÍêÕûWeb Server¾ÍÈ«²¿ÅäÖÃÍê³ÉÁË¡£
+è‡³æ­¤ï¼Œä¸€ä¸ªLinuxä¸‹çš„æ”¯æŒJavaã€PHPçš„å®Œæ•´Web Serverå°±å…¨éƒ¨é…ç½®å®Œæˆäº†ã€‚
 
-ÏêÏ¸°²×°Ö¸ÄÏ£º
+è¯¦ç»†å®‰è£…æŒ‡å—ï¼š
 http://docs.google.com/View?docid=dgh6pn6x_19ccgx54hd
 http://docs.google.com/Doc?id=dgh6pn6x_20cm4ktdcf
 

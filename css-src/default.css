@@ -13,12 +13,14 @@ html,body{height:100%;overflow:hidden}
 .hd{height:44px;background:#fcfdff;border-bottom:1px solid #b7c5e3;}
 .main{background:;}
 .ft{text-align:center;margin-top:20px;bottom:0px;line-height:24px;clear:both;font-size:12px;color:#333;}
-.logo{width:200px;height:40px;background:url(../img/bg.png) no-repeat 10px 8px;background-position:left 0 bottom -26px;}
+.logo{width:200px;height:40px;background:url(../img/bg.png) no-repeat 10px 8px;
+/*background-position:left 0 bottom -26px;*/
+}
 .hd div.logo a{display:block;width:200px;height:40px;}
 .hd-panel{display:;left:220px;top:25px;position:absolute;background:;z-index:99;}
 /*.hd-panel div.control-panel{font-size:14px;margin-top:-17px;margin-right:10px;margin-left:220px;background:transparent;text-align:;}*/
 .hd-panel div.control-panel{position:;font-size:14px;}
-.create-newfolder{width:220px;padding:5px;background:#fff;border:2px solid #b7c5e3;position:absolute;z-index:102}
+.create-newfolder{width:260px;padding:5px;background:#fff;border:2px solid #b7c5e3;position:absolute;z-index:102}
 .upload-area{background:#fff;display:;position:absolute;border:2px solid #b7c5e3;z-index:102;padding:0 5px;padding-top:5px;color:#999}
 #UploadPathTips,#divStatus{font-size:12px;color:#999}
 .user-bar{top:0;right:0;text-align:right;position:absolute;;color:#666;margin:5px 5px 0 0;height:20px}

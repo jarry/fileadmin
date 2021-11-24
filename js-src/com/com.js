@@ -170,7 +170,7 @@ var decodeSpecial = function(str) {
  * @author jarryli@gmail.com
  */
 var getSlash = function(path) {
-	if (path == null || path.length <= 0) return path;
+	if (path === null || path === undefined || path.length <= 0) return path;
 	var last = path.substring(path.length - 1);
 	//alert(path + " | " + last);
 	if (last == '/' || last == '\\') {
@@ -377,5 +377,85 @@ function hasError() {
  	return showTips(ErrorMessage);
 
  }
+
+//  function httpRequest(options) {
+// 	options = options || {};
+// 	var type = options.type || 'GET';
+// 	var url = options.url;
+// 	if (!url) {
+// 			logger.error('ajax:, url is not correct.', options);
+// 			return;
+// 	}
+// 	var contentType = options.contentType || 'application/x-www-form-urlencoded; charset=UTF-8';
+// 	var dataType = options.dataType || 'JSON';
+// 	type = type.toUpperCase();
+// 	dataType = dataType.toUpperCase();
+// 	var cache = options.cache || false;
+// 	var async = options.async || true;
+// 	var _getXHR = function() {
+// 			return new XMLHttpRequest() ||
+// 					new ActiveXObject('Msxml2.XMLHTTP') ||
+// 					new ActiveXObject('Microsoft.XMLHTTP');
+// 	};
+// 	var xhr = _getXHR();
+// 	var data = '', value = '';
+// 	if (typeof options.data == 'string') {
+// 			data = options.data;
+// 	} else {
+// 			for (var item in options.data) {
+// 					value = (type == 'GET') ? encodeURIComponent(options.data[item]) : options.data[item];
+// 					data += (item + '=' + value + '&');
+// 			}
+// 			if (data.length > 0 && data[data.length - 1] == '&') {
+// 					data = data.substring(0, data.length - 1);
+// 			}
+// 	}
+
+// 	if (type == 'GET' && (data !== '' || !cache) ) {
+// 			var flag = url.indexOf('?') != -1 ? '&' : '?';
+// 			url = url + flag;
+// 	}
+// 	if (type == 'GET' && 'string' == typeof data) {
+// 			url += data;
+// 	}
+// 	if (type == 'GET' && !cache) {
+// 			if (url.indexOf('?') != -1) {
+// 					url += '&';
+// 			}
+// 			url += '_=' + new Date().getTime();
+// 	}
+
+// 	xhr.open(type, url, async);
+// 	xhr.setRequestHeader('Content-Type', contentType);
+// 	for (var key in options.headers) {
+// 			xhr.setRequestHeader(key, options.headers[key]);
+// 	}
+// 	xhr.upload.onprogress = function(e) {
+// 			if ('function' == typeof options.progress) {
+// 					options.progress.apply(xhr, e);
+// 			}
+// 	};
+// 	xhr.onreadystatechange = function() {
+// 			var data = xhr.responseText || xhr.responseXML;
+// 			if (data && dataType == 'JSON') {
+// 					data = _.parseJSON(data);
+// 			}
+// 			if (xhr.readyState == 4) {
+// 					var stat = xhr.status;
+// 					if ((stat >= 200 && stat < 300) || stat == 304 ||
+// 							stat == 1223 || stat === 0) {
+// 							if (options.success) {
+// 									options.success.call(xhr, data);
+// 							}
+// 					} else {
+// 							if (options.error) {
+// 									options.error.call(xhr, data);
+// 							}
+// 					}
+// 			}
+// 	};
+// 	xhr.send(data || null);
+// 	return xhr;
+// }
 
 

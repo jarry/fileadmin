@@ -40,14 +40,14 @@ dhtmlxAjax={
 		var t=new dtmlXMLLoaderObject(true);
 		t.async=(arguments.length<3);
 		t.waitCall=callback;
-		t.loadXML(url)
+		t.loadXML(url);
 		return t;
 	},
 	post:function(url,post,callback){
 		var t=new dtmlXMLLoaderObject(true);
 		t.async=(arguments.length<4);
 		t.waitCall=callback;
-		t.loadXML(url,true,post)
+		t.loadXML(url,true,post);
 		return t;
 	},
 	getSync:function(url){
@@ -188,7 +188,7 @@ dtmlXMLLoaderObject.prototype.loadXML=function(filePath, postMode, postVars, rpc
 		filePath+=((filePath.indexOf("?") != -1) ? "&" : "?")+"a_dhx_rSeed="+(new Date()).valueOf();
 	this.filePath=filePath;
 
-	if ((!_isIE)&&(window.XMLHttpRequest))
+	if (window.XMLHttpRequest)
 		this.xmlDoc=new XMLHttpRequest();
 	else {
 		if (document.implementation&&document.implementation.createDocument){

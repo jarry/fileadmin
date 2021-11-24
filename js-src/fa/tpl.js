@@ -18,7 +18,7 @@ var HTMLTemplate = {
   createNewFolderHTML : 
 	  '<div class="create-newfolder" id="CreateNewFolder">'
 	 + '<form action="file" method="get" target="" onsubmit="return FileAction.createFolder(UPLOAD.uploadPath, this.name.value);" target="_blank">'
-		+ '名称:<input type="text" size="20" name="name" id="NewFolderName"/><br/>'
+		+ '名称:&nbsp;&nbsp;<input type="text" size="30" name="name" id="NewFolderName"/><br/>'
 		+ '<div class="tips" id="CreateNewFolerTips"></div>'
 		+ '<input type="submit" value="提交" />'
 		+ '&nbsp;&nbsp;<a href="javascript:FileAction.hideCreateFolder();" id="CreateNewFolderCancelButton" class="close-button">关闭</a>'
@@ -35,8 +35,9 @@ var HTMLTemplate = {
 	+ '		<span id="divStatus">&nbsp;</span>'
 	+ '	<div>'
 	+ '		<span id="spanButtonPlaceHolder"></span>'
-	+ '		<input id="btnCancel" type="button" value="停止上传" onClick="SWFUP.cancelQueue();" disabled="disabled"  />'
-	+ '		&nbsp;<a href="javascript:UploadAction.hideUploadArea();" class="close-button">关闭</a>'
+	+ '		<input id="btnCancel" type="file" multiple="multiple" value="选择文件" onchange="UploadAction.uploadStart(this.files);" />'
+	// + '		<input id="btnCancel" type="button" value="停止上传" onClick="SWFUP.cancelQueue();" disabled="disabled"  />'
+	+ '		&nbsp;<a href="javascript:UploadAction.hideUploadArea();" class="close-button" style="float:right;margin-right:5px;">关闭</a>'
 	+ '	</div>'
 	+ '</div>',
 

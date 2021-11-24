@@ -24,7 +24,7 @@ UploadAction = (function () {
 	}
 	
 	var setUploadPath = function(path) {
-		path = path +　getSlash(path);
+		path = path +  getSlash(path);
 		UPLOAD.uploadPath = decodeHTML(path);
 	 };
 
@@ -59,8 +59,14 @@ UploadAction = (function () {
 		if ('object' != typeof obj) return;
 		var isHide = ((obj.style.display == '' || obj.style.display == 'none'));
 		obj.style.display = isHide ? 'block' : 'none';
-	}
+	};
 	
+	var _uploadStart = function(files) {
+		uploadClass.startUpload(files, function(response) {
+			console.log('UploadAction.response:', response);
+		});
+	};
+
 	var init = function() {
 		Youngli.on(g('UploadFileLink'), "onclick", UploadAction.setUploadHTML);	  
 	};
@@ -70,7 +76,9 @@ UploadAction = (function () {
 		setUploadPath : setUploadPath,
 		setUploadHTML : setUploadHTML,
 		hideUploadArea : hideUploadArea,
-		setSWFUploadPath : setSWFUploadPath
+		setSWFUploadPath : setSWFUploadPath,
+		uploadStart: _uploadStart
 	};
+
 })();
 UploadAction.init();

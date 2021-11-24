@@ -44,8 +44,37 @@
 		'./js-src/fa/help.act.js'
 	];
 
-	for (var i = 0; i < Contact_JS_List.length; i++) {
-		document.write('<script src="' + Contact_JS_List[i] + '" type="text/javascript"></script>');
+	var jsCount = Contact_JS_List.length - 1;
+	var currentIndex = 0;
+	function loadJS(currentIndex) {
+		if (currentIndex >= jsCount) {
+			if (currentIndex === jsCount) {
+				console.log('js files load done.');
+				if (DirAction) {
+					DirAction.pageInit();
+				}
+			}
+			return;
+		}
+		var js = document.createElement('script');
+	   	js.src = Contact_JS_List[currentIndex];
+	   	js.addEventListener('load', function() {
+//	   		console.log(Contact_JS_List[currentIndex] + ' loaded.');
+	   		loadJS(currentIndex + 1);
+	   	});
+	    document.head.appendChild(js);
 	}
+	window.FA_JS_ASYNC_LOAD = true;
+	loadJS(0)
+	
+	/*
+	function syncloadJS() {
+		for (var i = 0; i < Contact_JS_List.length; i++) {
+			document.write('<script src="' + Contact_JS_List[i] + '" type="text/javascript"></script>');
+		}
+	}
+	syncloadJS()
+	*/
+
  }
 )();

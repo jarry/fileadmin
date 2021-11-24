@@ -142,6 +142,7 @@ Upload.prototype = {
     var self = this;
     var uploadNumber = files.length;
     var count = uploadNumber;
+
     for (var i = 0, l = files.length; i < l; i++) {
       var file = files[i];
       file.id = 'fileupload_' + i;
@@ -149,6 +150,7 @@ Upload.prototype = {
       formData.append('path', UPLOAD.uploadPath);
       formData.append('uploads', file);
       fileQueued.call(self, file);
+
 
       (function(self, file) {
         /*
@@ -194,7 +196,7 @@ Upload.prototype = {
         });
       })(self, file);
       // console.log('uopload.class->startUpload:xhr:', xhr);
-    }
+    };
 
   }
 }

@@ -50,10 +50,10 @@
    <error-code>java.lang.NullPointerException</error-code>  
    <location>/error/null.jsp</location>
 </error-page>
--->
+
 <init-param>
    <param-name>listings</param-name>
    <param-value>true</param-value>
 </init-param> 
-
+-->
 </web-app>
